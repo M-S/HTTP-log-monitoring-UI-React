@@ -29,8 +29,8 @@
   },
   "scripts": {
     "test": "mocha test/**.test.js",
-    "start1": "node server.js",
-    "start": "webpack-dev-server",
+    "start": "node server.js",
+    "devstart": "webpack-dev-server",
     "build": "webpack"
   },
   "repository": {

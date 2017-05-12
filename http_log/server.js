@@ -4,7 +4,7 @@ const WebSocket = require('ws')
 const HTTPTrafficGenerator = require('./lib/HTTPTrafficGenerator.js')
 const app = express()
 
-app.use(express.static('public'))
+app.use(express.static('build'))
 
 const server = http.createServer(app)
 const wss = new WebSocket.Server({ server })
