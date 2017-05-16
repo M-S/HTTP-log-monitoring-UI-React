@@ -1,38 +1,50 @@
-const WebSocket = require('ws');
 var React = require('react');
 var ReactDOM = require('react-dom');
-let receivedMessages = [];
 
-var Message = React.createClass({
-  get:function(){
-    setTimeout(function(){
-    ws.close();
-    console.log("ws close");
-  }, 2000);
+export default class Message extends React.Component {
+  constructor(props) {
+   super(props)
 
-  ws.on('message', (data) => {
-    receivedMessages.push(JSON.parse(data))
-    console.log(receivedMessages);
-  })
-},
+   this.state = {
+     messages: []
+   }
+ }
+  componentDidMount() {
 
-  render:function(){
+    // this is an "echo" websocket service
+  	this.connection = new WebSocket('ws://localhost:8000/');
+    // listen to onmessage event
+    this.connection.onmessage = evt => {
+      //this.connection.close()
+      //setTimeout(function(){
+        console.log(evt.data);
+        console.log(this.state.messages);
+        // add the new message to state
+      	this.setState({
+        	messages : this.state.messages.concat(JSON.parse(evt.data))
+        })
+      //}, 20000)
+  }
+}
+
+  //componentWillUnmount() {
+  //    this.connection.close()
+  //  }
+    // for testing purposes: sending to the echo service which will send it back back
+
+  render() {
     return (
 
       <div>
-      <button onClick={this.get}>Click</button>
-        <table>
-          <tbody>
-            <tr>
-              <td>{receivedMessages.url}</td>
-              <td>{receivedMessages.ip}</td>
-              <td>{receivedMessages.dateTime}</td>
-            </tr>
-          </tbody>
-        </table>
+      <div>
+          Message
+        </div>
+        // slice(-5) gives us the five most recent messages
+        <ul>{ this.state.messages.map( (msg, idx) =>
+          <li key={'msg-' + idx }>{msg.url}</li>
+         )}</ul>;
+
       </div>
     );
   }
-});
-
-module.exports = Message;
+}
