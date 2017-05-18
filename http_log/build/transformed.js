@@ -12502,11 +12502,13 @@ var _reactDom=__webpack_require__(25);function _interopRequireDefault(obj){retur
 
 Message=(0,_mobxReact.observer)(_class=(_class2=function(_React$Component){_inherits(Message,_React$Component);
 
+
 function Message(props){_classCallCheck(this,Message);var _this=_possibleConstructorReturn(this,(Message.__proto__||Object.getPrototypeOf(Message)).call(this,
-props));_initDefineProp(_this,"messages",_descriptor,_this);
+props));_initDefineProp(_this,"singleMessage",_descriptor,_this);
 
 _this.state={
-messages:[]};return _this;
+
+singleMessage:[]};return _this;
 
 }_createClass(Message,[{key:"componentDidMount",value:function componentDidMount()
 {var _this2=this;
@@ -12515,12 +12517,13 @@ messages:[]};return _this;
 this.connection=new WebSocket('ws://localhost:8000/');
 
 this.connection.onmessage=function(evt){
-
+_this2.state.singleMessage.pop();
 console.log(evt.data);
-console.log(_this2.state.messages);
+
 
 _this2.setState({
-messages:_this2.state.messages.concat(JSON.parse(evt.data))});
+
+singleMessage:_this2.state.singleMessage.concat(JSON.parse(evt.data))});
 
 };
 }},{key:"componentWillUnmount",value:function componentWillUnmount()
@@ -12529,22 +12532,20 @@ messages:_this2.state.messages.concat(JSON.parse(evt.data))});
 this.connection.close();
 }},{key:"render",value:function render()
 
-
 {
 return(
-
-_react2.default.createElement("div",{__source:{fileName:_jsxFileName,lineNumber:42}},
-_react2.default.createElement("div",{__source:{fileName:_jsxFileName,lineNumber:43}},"Message"),"// slice(-5) gives us the five most recent messages",
-
-
-
-_react2.default.createElement("ul",{__source:{fileName:_jsxFileName,lineNumber:47}},this.state.messages.map(function(msg,idx){return(
-_react2.default.createElement("li",{key:'msg-'+idx,__source:{fileName:_jsxFileName,lineNumber:48}},msg.url));})),";"));
+_react2.default.createElement("div",{__source:{fileName:_jsxFileName,lineNumber:43}},
+_react2.default.createElement("div",{__source:{fileName:_jsxFileName,lineNumber:44}},"Message"),"// slice(-5) gives us the five most recent messages",
 
 
 
+_react2.default.createElement("ul",{__source:{fileName:_jsxFileName,lineNumber:48}},this.state.singleMessage.map(function(msg,idx){return(
+_react2.default.createElement("li",{key:'msg-'+idx,__source:{fileName:_jsxFileName,lineNumber:49}},msg.url));})),";"));
 
-}}]);return Message;}(_react2.default.Component),(_descriptor=_applyDecoratedDescriptor(_class2.prototype,"messages",[_mobx.observable],{enumerable:true,initializer:function initializer(){return[];}})),_class2))||_class;exports.default=
+
+
+
+}}]);return Message;}(_react2.default.Component),(_descriptor=_applyDecoratedDescriptor(_class2.prototype,"singleMessage",[_mobx.observable],{enumerable:true,initializer:function initializer(){return[];}})),_class2))||_class;exports.default=
 
 
 
