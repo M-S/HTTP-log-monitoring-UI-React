@@ -10,6 +10,7 @@ class Message extends React.Component {
 
     @observable messages = []
     @observable singleMessage =[]
+    @observable totalHits = 0
     @observable mainPageCount = 0
     @observable newsPageCount = 0
     @observable aboutPageCount = 0
@@ -18,12 +19,15 @@ class Message extends React.Component {
     @observable blogCookPageCount = 0
     @observable blogRandomCount = 0
 
+
     constructor(props) {
      super(props)
 
      this.state = {
        messages: [],
        singleMessage: [],
+       main:[],
+       totalHits:0,
        mainPageCount: 0,
        newsPageCount : 0,
        aboutPageCount: 0,
@@ -35,45 +39,39 @@ class Message extends React.Component {
    }
 
     componentDidMount() {
-      // this is an "echo" websocket service
+      var newArray = []
+      var mainArray=[]
     	this.connection = new WebSocket('ws://localhost:8000/');
-
-      // listen to onmessage event
       this.connection.onmessage = evt => {
-          switch (this.state.singleMessage.url) {
-            case 'https://www.example.com/':
-              this.state.mainPageCount++
-              break;
-            case 'https://www.example.com/news':
-              this.state.newsPageCount++
-              break;
-            case 'https://www.example.com/about':
-              this.state.aboutPageCount++
-              break;
-            case 'https://www.example.com/blog':
-              this.state.blogPageCount++
-              break;
-            case 'https://www.example.com/blog/tech':
-              this.state.blogTechPageCount++
-              break;
-            case 'https://www.example.com/blog/cooking':
-              this.state.blogCookPageCount++
-              break;
-            case 'https://www.example.com/blog/random':
-              this.state.blogRandomCount++
-              break;
 
-            default:
+        newArray = this.state.singleMessage
+        //check message array every 60 seconds
 
-          }
-          this.state.singleMessage.pop(); //console.log(evt.data); console.log(this.state.messages);
+          //iterate through the array and filter the arrays into 7 diff arrays
+          console.log("Length of messages array: "+ newArray.length );
+          for(var i= 0, l = newArray.length; i< l; i++){
+            if(newArray[i].url === "https://www.example.com/" ){
+		            mainArray.push(newArray[i]);
+	             }
+             }
+            console.log("Filter results for main:", mainArray)
+
+
+
+
+        //if the length of any array exceeds  10 , alert a message
+
+        this.state.singleMessage.pop();
+          //console.log(evt.data); console.log(this.state.messages);
           // add the new message to state
         	this.setState({
           	messages : this.state.messages.concat(JSON.parse(evt.data)),
-            singleMessage :this.state.singleMessage.concat(JSON.parse(evt.data))
-          })
-    }
-  }
+            singleMessage :this.state.singleMessage.concat(JSON.parse(evt.data)),
+            totalHits: this.state.totalHits+1,
+            mainPageCount: mainArray.length
+            })
+          }
+        }
 
     componentWillUnmount() {
        this.connection.close()
@@ -117,7 +115,7 @@ class Message extends React.Component {
                     <td></td>
                   </tr>
                   <tr>
-                    <td>2</td>
+                    <td>3</td>
                     <td></td>
                     <td>'https://www.example.com/about'</td>
                     <td></td>
@@ -125,7 +123,7 @@ class Message extends React.Component {
                     <td></td>
                   </tr>
                   <tr>
-                    <td>2</td>
+                    <td>4</td>
                     <td></td>
                     <td>'https://www.example.com/blog'</td>
                     <td></td>
@@ -133,7 +131,7 @@ class Message extends React.Component {
                     <td></td>
                   </tr>
                   <tr>
-                    <td>2</td>
+                    <td>5</td>
                     <td></td>
                     <td></td>
                     <td>'https://www.example.com/blog/tech'</td>
@@ -141,7 +139,7 @@ class Message extends React.Component {
                     <td></td>
                   </tr>
                   <tr>
-                    <td>2</td>
+                    <td>6</td>
                     <td></td>
                     <td></td>
                     <td>'https://www.example.com/blog/cooking'</td>
@@ -149,11 +147,19 @@ class Message extends React.Component {
                     <td></td>
                   </tr>
                   <tr>
-                    <td>2</td>
+                    <td>7</td>
                     <td></td>
                     <td></td>
                     <td>'https://www.example.com/news'</td>
                     <td>{this.state.blogRandomCount}</td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>{this.state.totalHits}</td>
                     <td></td>
                   </tr>
                 </tbody>

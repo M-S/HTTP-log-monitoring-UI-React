@@ -35894,7 +35894,7 @@ _react2.default.createElement(_App2.default,{__source:{fileName:_jsxFileName,lin
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports,"__esModule",{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _class,_desc,_value,_class2,_descriptor,_descriptor2,_descriptor3,_descriptor4,_descriptor5,_descriptor6,_descriptor7,_descriptor8,_descriptor9,_jsxFileName="E:\\test\\http_log\\public\\receiveMessages.js";var _mobxReact=__webpack_require__(399);
+Object.defineProperty(exports,"__esModule",{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _class,_desc,_value,_class2,_descriptor,_descriptor2,_descriptor3,_descriptor4,_descriptor5,_descriptor6,_descriptor7,_descriptor8,_descriptor9,_descriptor10,_jsxFileName="E:\\test\\http_log\\public\\receiveMessages.js";var _mobxReact=__webpack_require__(399);
 var _mobx=__webpack_require__(149);
 var _react=__webpack_require__(1);var _react2=_interopRequireDefault(_react);
 var _reactDom=__webpack_require__(19);
@@ -35914,12 +35914,16 @@ Message=(0,_mobxReact.observer)(_class=(_class2=function(_React$Component){_inhe
 
 
 
+
+
 function Message(props){_classCallCheck(this,Message);var _this=_possibleConstructorReturn(this,(Message.__proto__||Object.getPrototypeOf(Message)).call(this,
-props));_initDefineProp(_this,"messages",_descriptor,_this);_initDefineProp(_this,"singleMessage",_descriptor2,_this);_initDefineProp(_this,"mainPageCount",_descriptor3,_this);_initDefineProp(_this,"newsPageCount",_descriptor4,_this);_initDefineProp(_this,"aboutPageCount",_descriptor5,_this);_initDefineProp(_this,"blogPageCount",_descriptor6,_this);_initDefineProp(_this,"blogTechPageCount",_descriptor7,_this);_initDefineProp(_this,"blogCookPageCount",_descriptor8,_this);_initDefineProp(_this,"blogRandomCount",_descriptor9,_this);
+props));_initDefineProp(_this,"messages",_descriptor,_this);_initDefineProp(_this,"singleMessage",_descriptor2,_this);_initDefineProp(_this,"totalHits",_descriptor3,_this);_initDefineProp(_this,"mainPageCount",_descriptor4,_this);_initDefineProp(_this,"newsPageCount",_descriptor5,_this);_initDefineProp(_this,"aboutPageCount",_descriptor6,_this);_initDefineProp(_this,"blogPageCount",_descriptor7,_this);_initDefineProp(_this,"blogTechPageCount",_descriptor8,_this);_initDefineProp(_this,"blogCookPageCount",_descriptor9,_this);_initDefineProp(_this,"blogRandomCount",_descriptor10,_this);
 
 _this.state={
 messages:[],
 singleMessage:[],
+main:[],
+totalHits:0,
 mainPageCount:0,
 newsPageCount:0,
 aboutPageCount:0,
@@ -35931,42 +35935,36 @@ blogRandomCount:0};return _this;
 }_createClass(Message,[{key:"componentDidMount",value:function componentDidMount()
 
 {var _this2=this;
-
+var newArray=[];
+var mainArray=[];
 this.connection=new WebSocket('ws://localhost:8000/');
-
-
 this.connection.onmessage=function(evt){
-switch(_this2.state.singleMessage){
-case'https://www.example.com/':
-_this2.state.mainPageCount++;
-break;
-case'https://www.example.com/news':
-_this2.state.newsPageCount++;
-break;
-case'https://www.example.com/about':
-_this2.state.aboutPageCount++;
-break;
-case'https://www.example.com/blog':
-_this2.state.blogPageCount++;
-break;
-case'https://www.example.com/blog/tech':
-_this2.state.blogTechPageCount++;
-break;
-case'https://www.example.com/blog/cooking':
-_this2.state.blogCookPageCount++;
-break;
-case'https://www.example.com/blog/random':
-_this2.state.blogRandomCount++;
-break;
 
-default:}
+newArray=_this2.state.singleMessage;
+
+
+
+console.log("Length of messages array: "+newArray.length);
+for(var i=0,l=newArray.length;i<l;i++){
+if(newArray[i].url==="https://www.example.com/"){
+mainArray.push(newArray[i]);
+}
+}
+console.log("Filter results for main:",mainArray);
+
+
+
+
 
 
 _this2.state.singleMessage.pop();
 
+
 _this2.setState({
 messages:_this2.state.messages.concat(JSON.parse(evt.data)),
-singleMessage:_this2.state.singleMessage.concat(JSON.parse(evt.data))});
+singleMessage:_this2.state.singleMessage.concat(JSON.parse(evt.data)),
+totalHits:_this2.state.totalHits+1,
+mainPageCount:mainArray.length});
 
 };
 }},{key:"componentWillUnmount",value:function componentWillUnmount()
@@ -35977,94 +35975,105 @@ this.connection.close();
 
 {
 return(
-_react2.default.createElement("div",{__source:{fileName:_jsxFileName,lineNumber:84}},
-_react2.default.createElement("div",{__source:{fileName:_jsxFileName,lineNumber:85}},"Message"),
+_react2.default.createElement("div",{__source:{fileName:_jsxFileName,lineNumber:82}},
+_react2.default.createElement("div",{__source:{fileName:_jsxFileName,lineNumber:83}},"Message"),
 
 
-_react2.default.createElement(_reactBootstrap.Grid,{__source:{fileName:_jsxFileName,lineNumber:88}},
-_react2.default.createElement(_reactBootstrap.Row,{className:"show-grid",__source:{fileName:_jsxFileName,lineNumber:89}},
-_react2.default.createElement(_reactBootstrap.Col,{md:6,__source:{fileName:_jsxFileName,lineNumber:90}},
-_react2.default.createElement(_reactBootstrap.Table,{striped:true,bordered:true,condensed:true,hover:true,__source:{fileName:_jsxFileName,lineNumber:91}},
-_react2.default.createElement("thead",{__source:{fileName:_jsxFileName,lineNumber:92}},
-_react2.default.createElement("tr",{__source:{fileName:_jsxFileName,lineNumber:93}},
-_react2.default.createElement("th",{__source:{fileName:_jsxFileName,lineNumber:94}},"#"),
-_react2.default.createElement("th",{__source:{fileName:_jsxFileName,lineNumber:95}},"Pages"),
-_react2.default.createElement("th",{__source:{fileName:_jsxFileName,lineNumber:96}},"Section 1"),
-_react2.default.createElement("th",{__source:{fileName:_jsxFileName,lineNumber:97}},"Section 2"),
-_react2.default.createElement("th",{__source:{fileName:_jsxFileName,lineNumber:98}},"Hits"),
-_react2.default.createElement("th",{__source:{fileName:_jsxFileName,lineNumber:99}},"Time and date"))),
+_react2.default.createElement(_reactBootstrap.Grid,{__source:{fileName:_jsxFileName,lineNumber:86}},
+_react2.default.createElement(_reactBootstrap.Row,{className:"show-grid",__source:{fileName:_jsxFileName,lineNumber:87}},
+_react2.default.createElement(_reactBootstrap.Col,{md:6,__source:{fileName:_jsxFileName,lineNumber:88}},
+_react2.default.createElement(_reactBootstrap.Table,{striped:true,bordered:true,condensed:true,hover:true,__source:{fileName:_jsxFileName,lineNumber:89}},
+_react2.default.createElement("thead",{__source:{fileName:_jsxFileName,lineNumber:90}},
+_react2.default.createElement("tr",{__source:{fileName:_jsxFileName,lineNumber:91}},
+_react2.default.createElement("th",{__source:{fileName:_jsxFileName,lineNumber:92}},"#"),
+_react2.default.createElement("th",{__source:{fileName:_jsxFileName,lineNumber:93}},"Pages"),
+_react2.default.createElement("th",{__source:{fileName:_jsxFileName,lineNumber:94}},"Section 1"),
+_react2.default.createElement("th",{__source:{fileName:_jsxFileName,lineNumber:95}},"Section 2"),
+_react2.default.createElement("th",{__source:{fileName:_jsxFileName,lineNumber:96}},"Hits"),
+_react2.default.createElement("th",{__source:{fileName:_jsxFileName,lineNumber:97}},"Time and date"))),
 
 
-_react2.default.createElement("tbody",{__source:{fileName:_jsxFileName,lineNumber:102}},
-_react2.default.createElement("tr",{__source:{fileName:_jsxFileName,lineNumber:103}},
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:104}},"1"),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:105}},"'https://www.example.com/'"),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:106}}),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:107}}),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:108}},this.state.mainPageCount),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:109}})),
+_react2.default.createElement("tbody",{__source:{fileName:_jsxFileName,lineNumber:100}},
+_react2.default.createElement("tr",{__source:{fileName:_jsxFileName,lineNumber:101}},
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:102}},"1"),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:103}},"'https://www.example.com/'"),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:104}}),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:105}}),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:106}},this.state.mainPageCount),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:107}})),
 
-_react2.default.createElement("tr",{__source:{fileName:_jsxFileName,lineNumber:111}},
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:112}},"2"),
+_react2.default.createElement("tr",{__source:{fileName:_jsxFileName,lineNumber:109}},
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:110}},"2"),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:111}}),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:112}},"'https://www.example.com/news'"),
 _react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:113}}),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:114}},"'https://www.example.com/news'"),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:115}}),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:116}},this.state.newsPageCount),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:117}})),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:114}},this.state.newsPageCount),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:115}})),
 
-_react2.default.createElement("tr",{__source:{fileName:_jsxFileName,lineNumber:119}},
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:120}},"2"),
+_react2.default.createElement("tr",{__source:{fileName:_jsxFileName,lineNumber:117}},
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:118}},"3"),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:119}}),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:120}},"'https://www.example.com/about'"),
 _react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:121}}),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:122}},"'https://www.example.com/about'"),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:123}}),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:124}},this.state.aboutPageCount),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:125}})),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:122}},this.state.aboutPageCount),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:123}})),
 
-_react2.default.createElement("tr",{__source:{fileName:_jsxFileName,lineNumber:127}},
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:128}},"2"),
+_react2.default.createElement("tr",{__source:{fileName:_jsxFileName,lineNumber:125}},
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:126}},"4"),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:127}}),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:128}},"'https://www.example.com/blog'"),
 _react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:129}}),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:130}},"'https://www.example.com/blog'"),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:131}}),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:132}},this.state.blogPageCount),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:133}})),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:130}},this.state.blogPageCount),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:131}})),
 
-_react2.default.createElement("tr",{__source:{fileName:_jsxFileName,lineNumber:135}},
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:136}},"2"),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:137}}),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:138}}),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:139}},"'https://www.example.com/blog/tech'"),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:140}},this.state.blogTechPageCount),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:141}})),
+_react2.default.createElement("tr",{__source:{fileName:_jsxFileName,lineNumber:133}},
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:134}},"5"),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:135}}),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:136}}),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:137}},"'https://www.example.com/blog/tech'"),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:138}},this.state.blogTechPageCount),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:139}})),
 
-_react2.default.createElement("tr",{__source:{fileName:_jsxFileName,lineNumber:143}},
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:144}},"2"),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:145}}),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:146}}),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:147}},"'https://www.example.com/blog/cooking'"),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:148}},this.state.blogCookPageCount),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:149}})),
+_react2.default.createElement("tr",{__source:{fileName:_jsxFileName,lineNumber:141}},
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:142}},"6"),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:143}}),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:144}}),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:145}},"'https://www.example.com/blog/cooking'"),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:146}},this.state.blogCookPageCount),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:147}})),
 
-_react2.default.createElement("tr",{__source:{fileName:_jsxFileName,lineNumber:151}},
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:152}},"2"),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:153}}),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:154}}),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:155}},"'https://www.example.com/news'"),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:156}},this.state.blogRandomCount),
-_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:157}}))))),
+_react2.default.createElement("tr",{__source:{fileName:_jsxFileName,lineNumber:149}},
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:150}},"7"),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:151}}),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:152}}),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:153}},"'https://www.example.com/news'"),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:154}},this.state.blogRandomCount),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:155}})),
+
+_react2.default.createElement("tr",{__source:{fileName:_jsxFileName,lineNumber:157}},
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:158}}),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:159}}),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:160}}),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:161}}),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:162}},this.state.totalHits),
+_react2.default.createElement("td",{__source:{fileName:_jsxFileName,lineNumber:163}})))))),
 
 
 
 
-_react2.default.createElement(_reactBootstrap.Col,{md:6,__source:{fileName:_jsxFileName,lineNumber:162}},
-_react2.default.createElement(_reactBootstrap.ListGroup,{__source:{fileName:_jsxFileName,lineNumber:163}},
+
+
+_react2.default.createElement(_reactBootstrap.Row,{__source:{fileName:_jsxFileName,lineNumber:170}},
+_react2.default.createElement(_reactBootstrap.Col,{md:6,__source:{fileName:_jsxFileName,lineNumber:171}},
+_react2.default.createElement(_reactBootstrap.ListGroup,{__source:{fileName:_jsxFileName,lineNumber:172}},
 this.state.singleMessage.map(function(msg,idx){return(
-_react2.default.createElement(_reactBootstrap.ListGroupItem,{key:'msg-'+idx,__source:{fileName:_jsxFileName,lineNumber:165}},msg.url));}),
+_react2.default.createElement(_reactBootstrap.ListGroupItem,{key:'msg-'+idx,__source:{fileName:_jsxFileName,lineNumber:174}},msg.url));}),
 
 this.state.singleMessage.map(function(msg,idx){return(
-_react2.default.createElement(_reactBootstrap.ListGroupItem,{key:'msg-'+idx,__source:{fileName:_jsxFileName,lineNumber:168}},msg.ip));}),
+_react2.default.createElement(_reactBootstrap.ListGroupItem,{key:'msg-'+idx,__source:{fileName:_jsxFileName,lineNumber:177}},msg.ip));}),
 
 this.state.singleMessage.map(function(msg,idx){return(
-_react2.default.createElement(_reactBootstrap.ListGroupItem,{key:'msg-'+idx,__source:{fileName:_jsxFileName,lineNumber:171}},msg.dateTime));})))))));
+_react2.default.createElement(_reactBootstrap.ListGroupItem,{key:'msg-'+idx,__source:{fileName:_jsxFileName,lineNumber:180}},msg.dateTime));})))))));
 
 
 
@@ -36075,7 +36084,7 @@ _react2.default.createElement(_reactBootstrap.ListGroupItem,{key:'msg-'+idx,__so
 
 
 
-}}]);return Message;}(_react2.default.Component),(_descriptor=_applyDecoratedDescriptor(_class2.prototype,"messages",[_mobx.observable],{enumerable:true,initializer:function initializer(){return[];}}),_descriptor2=_applyDecoratedDescriptor(_class2.prototype,"singleMessage",[_mobx.observable],{enumerable:true,initializer:function initializer(){return[];}}),_descriptor3=_applyDecoratedDescriptor(_class2.prototype,"mainPageCount",[_mobx.observable],{enumerable:true,initializer:function initializer(){return 0;}}),_descriptor4=_applyDecoratedDescriptor(_class2.prototype,"newsPageCount",[_mobx.observable],{enumerable:true,initializer:function initializer(){return 0;}}),_descriptor5=_applyDecoratedDescriptor(_class2.prototype,"aboutPageCount",[_mobx.observable],{enumerable:true,initializer:function initializer(){return 0;}}),_descriptor6=_applyDecoratedDescriptor(_class2.prototype,"blogPageCount",[_mobx.observable],{enumerable:true,initializer:function initializer(){return 0;}}),_descriptor7=_applyDecoratedDescriptor(_class2.prototype,"blogTechPageCount",[_mobx.observable],{enumerable:true,initializer:function initializer(){return 0;}}),_descriptor8=_applyDecoratedDescriptor(_class2.prototype,"blogCookPageCount",[_mobx.observable],{enumerable:true,initializer:function initializer(){return 0;}}),_descriptor9=_applyDecoratedDescriptor(_class2.prototype,"blogRandomCount",[_mobx.observable],{enumerable:true,initializer:function initializer(){return 0;}})),_class2))||_class;exports.default=
+}}]);return Message;}(_react2.default.Component),(_descriptor=_applyDecoratedDescriptor(_class2.prototype,"messages",[_mobx.observable],{enumerable:true,initializer:function initializer(){return[];}}),_descriptor2=_applyDecoratedDescriptor(_class2.prototype,"singleMessage",[_mobx.observable],{enumerable:true,initializer:function initializer(){return[];}}),_descriptor3=_applyDecoratedDescriptor(_class2.prototype,"totalHits",[_mobx.observable],{enumerable:true,initializer:function initializer(){return 0;}}),_descriptor4=_applyDecoratedDescriptor(_class2.prototype,"mainPageCount",[_mobx.observable],{enumerable:true,initializer:function initializer(){return 0;}}),_descriptor5=_applyDecoratedDescriptor(_class2.prototype,"newsPageCount",[_mobx.observable],{enumerable:true,initializer:function initializer(){return 0;}}),_descriptor6=_applyDecoratedDescriptor(_class2.prototype,"aboutPageCount",[_mobx.observable],{enumerable:true,initializer:function initializer(){return 0;}}),_descriptor7=_applyDecoratedDescriptor(_class2.prototype,"blogPageCount",[_mobx.observable],{enumerable:true,initializer:function initializer(){return 0;}}),_descriptor8=_applyDecoratedDescriptor(_class2.prototype,"blogTechPageCount",[_mobx.observable],{enumerable:true,initializer:function initializer(){return 0;}}),_descriptor9=_applyDecoratedDescriptor(_class2.prototype,"blogCookPageCount",[_mobx.observable],{enumerable:true,initializer:function initializer(){return 0;}}),_descriptor10=_applyDecoratedDescriptor(_class2.prototype,"blogRandomCount",[_mobx.observable],{enumerable:true,initializer:function initializer(){return 0;}})),_class2))||_class;exports.default=
 
 
 Message;
