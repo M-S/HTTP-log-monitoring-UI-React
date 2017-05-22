@@ -11,6 +11,7 @@ class Message extends React.Component {
     @observable messages = []
     @observable singleMessage =[]
     @observable totalHits = 0
+    @observable totalHitsInterval = 0
     @observable mainPageCount = 0
     @observable newsPageCount = 0
     @observable aboutPageCount = 0
@@ -18,6 +19,7 @@ class Message extends React.Component {
     @observable blogTechPageCount = 0
     @observable blogCookPageCount = 0
     @observable blogRandomCount = 0
+    @observable HitsAlert=""
 
 
     constructor(props) {
@@ -34,41 +36,77 @@ class Message extends React.Component {
        blogPageCount: 0,
        blogTechPageCount: 0,
        blogCookPageCount: 0,
-       blogRandomCount: 0
+       blogRandomCount: 0,
+       HitsAlert:""
      }
    }
 
     componentDidMount() {
-      var newArray = []
+      var newArray =[]
       var mainArray=[]
+      var newsArray=[]
+      var aboutArray=[]
+      var blogArray=[]
+      var blogTechArray =[]
+      var blogCookArray=[]
+      var blogRandomArray=[]
+      var HitMessage=""
+      var HitTime=[{timer:0, count:0}]
+      var HitCount=0
     	this.connection = new WebSocket('ws://localhost:8000/');
       this.connection.onmessage = evt => {
-
         newArray = this.state.singleMessage
-        //check message array every 60 seconds
-
-          //iterate through the array and filter the arrays into 7 diff arrays
-          console.log("Length of messages array: "+ newArray.length );
+        HitCount = this.state.totalHits
+        //To filter the traffic into respective arrays one by one
           for(var i= 0, l = newArray.length; i< l; i++){
+            if(HitCount%10 == 0 && newArray.length>0){
+              var timeHit = newArray[i].dateTime
+              HitTime.push({timer: timeHit, count:HitCount})
+              console.log("Current Hit time is : "+ HitTime.timer+ "Current Hit count : "+ HitTime.count)
+            }
+
             if(newArray[i].url === "https://www.example.com/" ){
 		            mainArray.push(newArray[i]);
-	             }
-             }
-            console.log("Filter results for main:", mainArray)
+              }else if (newArray[i].url === "https://www.example.com/news") {
+                newsArray.push(newArray[i]);
+              }else if (newArray[i].url === "https://www.example.com/about") {
+                aboutArray.push(newArray[i]);
+              }else if (newArray[i].url === "https://www.example.com/blog") {
+                blogArray.push(newArray[i]);
+              }else if (newArray[i].url === "https://www.example.com/blog/tech") {
+                blogTechArray.push(newArray[i]);
+              }else if (newArray[i].url === "https://www.example.com/blog/cooking") {
+                blogCookArray.push(newArray[i]);
+              }else if (newArray[i].url === "https://www.example.com/blog/random") {
+                blogRandomArray.push(newArray[i]);
+              }
+              }
 
 
+            this.state.singleMessage.pop();
 
+            //To check for the number of hits on pages every 2 minutes
+            /**function checkHit(){
+              setTimeout(checkHit, 2*60*1000)
+              if(HitTime.length>1){
+                var index =HitTime.length+1
+                  HitMesage="High traffic generated an alert -hits: "+ HitTime[index].count+", triggered at"+ HitTime[index].timer
+              }
+              }
 
-        //if the length of any array exceeds  10 , alert a message
-
-        this.state.singleMessage.pop();
-          //console.log(evt.data); console.log(this.state.messages);
-          // add the new message to state
+            checkHit();**/
         	this.setState({
           	messages : this.state.messages.concat(JSON.parse(evt.data)),
             singleMessage :this.state.singleMessage.concat(JSON.parse(evt.data)),
             totalHits: this.state.totalHits+1,
-            mainPageCount: mainArray.length
+            mainPageCount: mainArray.length,
+            newsPageCount:newsArray.length,
+            aboutPageCount:aboutArray.length,
+            blogPageCount:blogArray.length,
+            blogTechPageCount:blogTechArray.length,
+            blogCookPageCount:blogCookArray.length,
+            blogRandomCount:blogRandomArray.length,
+            HitsAlert:HitMessage
             })
           }
         }
@@ -80,12 +118,13 @@ class Message extends React.Component {
     render() {
       return (
         <div>
-          <div>
-              Message
-          </div>
+
         <Grid>
           <Row className="show-grid">
-            <Col md={6}>
+          <Col md={8}>
+            <div>
+                Traffic list
+            </div>
               <Table striped bordered condensed hover>
                 <thead>
                   <tr>
@@ -104,7 +143,7 @@ class Message extends React.Component {
                     <td></td>
                     <td></td>
                     <td>{this.state.mainPageCount}</td>
-                    <td></td>
+                    <td>{}</td>
                   </tr>
                   <tr>
                     <td>2</td>
@@ -179,6 +218,15 @@ class Message extends React.Component {
             {this.state.singleMessage.map( (msg, idx) =>
               <ListGroupItem key={'msg-' + idx }>{msg.dateTime}</ListGroupItem>
             )}
+          </ListGroup>
+          </Col>
+          </Row>
+          <Row>
+          <Col md={6}>
+          <ListGroup>
+
+              <ListGroupItem>{this.state.HitAlert}</ListGroupItem>
+
           </ListGroup>
           </Col>
           </Row>

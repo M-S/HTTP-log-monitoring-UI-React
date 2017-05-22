@@ -7,7 +7,7 @@ import Message from '../receiveMessages'
   render(){
     return(
       <div>
-        <h1>Message Received from server</h1>
+        <h1>HTTP Traffic UI</h1>
         <Message />
       </div>
     );
