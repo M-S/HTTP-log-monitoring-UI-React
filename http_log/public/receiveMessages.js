@@ -19,7 +19,7 @@ class Message extends React.Component {
     @observable blogTechPageCount = 0
     @observable blogCookPageCount = 0
     @observable blogRandomCount = 0
-    @observable HitsAlert=""
+    @observable HitsAlert=[]
 
 
     constructor(props) {
@@ -54,16 +54,17 @@ class Message extends React.Component {
       var startHitCount
       var startTimeSeconds=0
 
+      /***Establishes websocket connection ****/
     	this.connection = new WebSocket('ws://localhost:8000/');
 
+      /**To handle data received when connection to websocket is established **/
       this.connection.onmessage = evt => {
-
+        //single data received is stored in newArray
         newArray = this.state.singleMessage
         HitCount = this.state.totalHits
 
-        //To filter the traffic into respective arrays one by one
           for(var i= 0, l = newArray.length; i< l; i++){
-
+            //Set start Time of Hits and convert dateTime to seconds
               if(HitCount==1){
                 var startTime = new Date()
                 startTimeSeconds=startTime.getTime()/1000
@@ -71,7 +72,7 @@ class Message extends React.Component {
                 startHitCount = HitCount
                 console.log("start Hit Count: " + startHitCount)
               }
-
+              //to find the difference between current Time and start time in seconds
               var currentTime= newArray[i].dateTime
               var date = new Date(currentTime)
               var currentTimeSeconds = date.getTime()/1000
@@ -79,8 +80,9 @@ class Message extends React.Component {
               //console.log("Time diff: "+ timeDiff)
 
 
-
-      if(Math.abs(timeDiff)>2*60){
+      //Whenever total traffic for the past 2 minutes exceeds a certain number on average,
+      //add a message saying `High traffic generated an alert - hits = {value}, triggered at {time}`
+            if(Math.abs(timeDiff)>2*60){
               console.log("Time diff >2 minutes ")
               if((HitCount+startHitCount)/2 >150){
                 var timeHit = newArray[i].dateTime
@@ -90,7 +92,7 @@ class Message extends React.Component {
                 console.log("new start time:" + startTimeSeconds)
                 startHitCount = HitCount
                 console.log("new start hit count :" + startHitCount)
-                var HitMessage = "Hit time : "+ dateHit.toString()+ " Current Hit count : "+ HitCount
+                var HitMessage = " - hits"+ HitCount+" ,triggered at time : "+ dateHit.toString()
                 console.log(HitMessage)
                 this.setState({
                   HitsAlert:this.state.HitsAlert.concat(HitMessage)
@@ -98,6 +100,7 @@ class Message extends React.Component {
               }
             }
 
+            /****To filter the data into respective arrays one by one***/
             if(newArray[i].url === "https://www.example.com/" ){
 		            mainArray.push(newArray[i]);
               }else if (newArray[i].url === "https://www.example.com/news") {
@@ -114,40 +117,29 @@ class Message extends React.Component {
                 blogRandomArray.push(newArray[i]);
               }
               }
-
-
+            //remove the last array object from singleMessage to save memory
             this.state.singleMessage.pop();
+            //set values to the state
+            	this.setState({
+              	messages : this.state.messages.concat(JSON.parse(evt.data)),
+                singleMessage :this.state.singleMessage.concat(JSON.parse(evt.data)),
+                totalHits: this.state.totalHits+1,
+                mainPageCount: mainArray.length,
+                newsPageCount:newsArray.length,
+                aboutPageCount:aboutArray.length,
+                blogPageCount:blogArray.length,
+                blogTechPageCount:blogTechArray.length,
+                blogCookPageCount:blogCookArray.length,
+                blogRandomCount:blogRandomArray.length
 
-            //To check for the number of hits on pages every 2 minutes
-            /**function checkHit(){
-              setTimeout(checkHit, 2*60*1000)
-              if(HitTime.length>1){
-                var index =HitTime.length+1
-                  HitMesage="High traffic generated an alert -hits: "+ HitTime[index].count+", triggered at"+ HitTime[index].timer
-              }
-              }
-
-            checkHit();**/
-        	this.setState({
-          	messages : this.state.messages.concat(JSON.parse(evt.data)),
-            singleMessage :this.state.singleMessage.concat(JSON.parse(evt.data)),
-            totalHits: this.state.totalHits+1,
-            mainPageCount: mainArray.length,
-            newsPageCount:newsArray.length,
-            aboutPageCount:aboutArray.length,
-            blogPageCount:blogArray.length,
-            blogTechPageCount:blogTechArray.length,
-            blogCookPageCount:blogCookArray.length,
-            blogRandomCount:blogRandomArray.length
-
-            })
+                })
           }
         }
 
     componentWillUnmount() {
        this.connection.close()
     }
-
+    //render UI
     render() {
       return (
         <div>
