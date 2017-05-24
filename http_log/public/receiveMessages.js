@@ -37,7 +37,9 @@ class Message extends React.Component {
        blogTechPageCount: 0,
        blogCookPageCount: 0,
        blogRandomCount: 0,
-       HitsAlert:[]
+       HitsAlert:[],
+       HighestHitCount:0,
+       HighestHitPage:""
      }
    }
 
@@ -117,6 +119,38 @@ class Message extends React.Component {
                 blogRandomArray.push(newArray[i]);
               }
               }
+              //Find the page with  most number of hits
+              var HitPage=""
+              var HighestHit = Math.max(mainArray.length,newsArray.length,aboutArray.length,blogArray.length,blogTechArray.length,blogCookArray.length,blogRandomArray.length)
+              console.log("HighestHit: "+HighestHit)
+              switch (HighestHit) {
+                case mainArray.length:
+                  HitPage="https://www.example.com/"
+                  break;
+                case newsArray.length:
+                  HitPage="https://www.example.com/news"
+                  break;
+                case aboutArray.length:
+                  HitPage="https://www.example.com/about"
+                  break;
+                case blogArray.length:
+                  HitPage="https://www.example.com/blog"
+                  break;
+                case blogTechArray.length:
+                  HitPage="https://www.example.com/blog/tech"
+                  break;
+                case blogCookArray.length:
+                  HitPage="https://www.example.com/blog/cooking"
+                  break;
+                case blogRandomArray.length:
+                  HitPage="https://www.example.com/blog/random"
+                  break;
+                default:HitPage=""
+              }
+              console.log("HitPage: "+HitPage)
+
+
+
             //remove the last array object from singleMessage to save memory
             this.state.singleMessage.pop();
             //set values to the state
@@ -130,7 +164,9 @@ class Message extends React.Component {
                 blogPageCount:blogArray.length,
                 blogTechPageCount:blogTechArray.length,
                 blogCookPageCount:blogCookArray.length,
-                blogRandomCount:blogRandomArray.length
+                blogRandomCount:blogRandomArray.length,
+                HighestHitPage:HitPage,
+                HighestHitCount:HighestHit
 
                 })
           }
@@ -145,86 +181,65 @@ class Message extends React.Component {
         <div>
 
         <Grid>
+        <Row>
+        <Col md={6}>
+        <ListGroup>
+          <ListGroupItem>Top most Hit</ListGroupItem>
+          <ListGroupItem>{this.state.HighestHitPage}</ListGroupItem>
+          <ListGroupItem>{this.state.HighestHitCount}</ListGroupItem>
+        </ListGroup>
+        </Col>
+        </Row>
           <Row className="show-grid">
           <Col md={8}>
-            <div>
-                Traffic list
-            </div>
               <Table striped bordered condensed hover>
                 <thead>
                   <tr>
                     <th>#</th>
                     <th>Pages</th>
-                    <th>Section 1</th>
-                    <th>Section 2</th>
                     <th>Hits</th>
-                    <th>Time and date</th>
-                  </tr>
+                    </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>1</td>
                     <td>'https://www.example.com/'</td>
-                    <td></td>
-                    <td></td>
                     <td>{this.state.mainPageCount}</td>
-                    <td>{}</td>
                   </tr>
                   <tr>
                     <td>2</td>
-                    <td></td>
                     <td>'https://www.example.com/news'</td>
-                    <td></td>
                     <td>{this.state.newsPageCount}</td>
-                    <td></td>
                   </tr>
                   <tr>
                     <td>3</td>
-                    <td></td>
                     <td>'https://www.example.com/about'</td>
-                    <td></td>
                     <td>{this.state.aboutPageCount}</td>
-                    <td></td>
                   </tr>
                   <tr>
                     <td>4</td>
-                    <td></td>
                     <td>'https://www.example.com/blog'</td>
-                    <td></td>
                     <td>{this.state.blogPageCount}</td>
-                    <td></td>
                   </tr>
                   <tr>
                     <td>5</td>
-                    <td></td>
-                    <td></td>
                     <td>'https://www.example.com/blog/tech'</td>
                     <td>{this.state.blogTechPageCount}</td>
-                    <td></td>
                   </tr>
                   <tr>
                     <td>6</td>
-                    <td></td>
-                    <td></td>
                     <td>'https://www.example.com/blog/cooking'</td>
                     <td>{this.state.blogCookPageCount}</td>
-                    <td></td>
                   </tr>
                   <tr>
                     <td>7</td>
-                    <td></td>
-                    <td></td>
                     <td>'https://www.example.com/news'</td>
                     <td>{this.state.blogRandomCount}</td>
-                    <td></td>
                   </tr>
                   <tr>
                     <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>TOTAL HitsAlert</td>
                     <td>{this.state.totalHits}</td>
-                    <td></td>
                   </tr>
                 </tbody>
               </Table>
