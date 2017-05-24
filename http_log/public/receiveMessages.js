@@ -37,7 +37,7 @@ class Message extends React.Component {
        blogTechPageCount: 0,
        blogCookPageCount: 0,
        blogRandomCount: 0,
-       HitsAlert:""
+       HitsAlert:[]
      }
    }
 
@@ -50,19 +50,52 @@ class Message extends React.Component {
       var blogTechArray =[]
       var blogCookArray=[]
       var blogRandomArray=[]
-      var HitMessage=""
-      var HitTime=[{timer:0, count:0}]
       var HitCount=0
+      var startHitCount
+      var startTimeSeconds=0
+
     	this.connection = new WebSocket('ws://localhost:8000/');
+
       this.connection.onmessage = evt => {
+
         newArray = this.state.singleMessage
         HitCount = this.state.totalHits
+
         //To filter the traffic into respective arrays one by one
           for(var i= 0, l = newArray.length; i< l; i++){
-            if(HitCount%10 == 0 && newArray.length>0){
-              var timeHit = newArray[i].dateTime
-              HitTime.push({timer: timeHit, count:HitCount})
-              console.log("Current Hit time is : "+ HitTime.timer+ "Current Hit count : "+ HitTime.count)
+
+              if(HitCount==1){
+                var startTime = new Date()
+                startTimeSeconds=startTime.getTime()/1000
+                console.log("start time: " + startTime.toString())
+                startHitCount = HitCount
+                console.log("start Hit Count: " + startHitCount)
+              }
+
+              var currentTime= newArray[i].dateTime
+              var date = new Date(currentTime)
+              var currentTimeSeconds = date.getTime()/1000
+              var timeDiff= Math.round(currentTimeSeconds-startTimeSeconds)
+              //console.log("Time diff: "+ timeDiff)
+
+
+
+      if(Math.abs(timeDiff)>2*60){
+              console.log("Time diff >2 minutes ")
+              if((HitCount+startHitCount)/2 >150){
+                var timeHit = newArray[i].dateTime
+                var dateHit = new Date(timeHit)
+
+                startTimeSeconds=currentTimeSeconds
+                console.log("new start time:" + startTimeSeconds)
+                startHitCount = HitCount
+                console.log("new start hit count :" + startHitCount)
+                var HitMessage = "Hit time : "+ dateHit.toString()+ " Current Hit count : "+ HitCount
+                console.log(HitMessage)
+                this.setState({
+                  HitsAlert:this.state.HitsAlert.concat(HitMessage)
+                })
+              }
             }
 
             if(newArray[i].url === "https://www.example.com/" ){
@@ -105,8 +138,8 @@ class Message extends React.Component {
             blogPageCount:blogArray.length,
             blogTechPageCount:blogTechArray.length,
             blogCookPageCount:blogCookArray.length,
-            blogRandomCount:blogRandomArray.length,
-            HitsAlert:HitMessage
+            blogRandomCount:blogRandomArray.length
+
             })
           }
         }
@@ -224,8 +257,8 @@ class Message extends React.Component {
           <Row>
           <Col md={6}>
           <ListGroup>
-
-              <ListGroupItem>{this.state.HitAlert}</ListGroupItem>
+            {this.state.HitsAlert.map((alert) =>
+            <ListGroupItem key={alert.toString()}><span>HIGH TRAFFIC ALERT: </span>{alert}</ListGroupItem> )}
 
           </ListGroup>
           </Col>
@@ -240,57 +273,3 @@ class Message extends React.Component {
 }
 
 export default Message;
-
-
-
-
-
-/**var React = require('react');
-var ReactDOM = require('react-dom');
-
-export default class Message extends React.Component {
-  constructor(props) {
-   super(props)
-
-   this.state = {
-     messages: []
-   }
- }
-  componentDidMount() {
-
-    // this is an "echo" websocket service
-  	this.connection = new WebSocket('ws://localhost:8000/');
-    // listen to onmessage event
-    this.connection.onmessage = evt => {
-
-        console.log(evt.data);
-        console.log(this.state.messages);
-        // add the new message to state
-      	this.setState({
-        	messages : this.state.messages.concat(JSON.parse(evt.data))
-        })
-  }
-}
-
-  componentWillUnmount() {
-     this.connection.close()
-  }
-
-
-  render() {
-    return (
-
-      <div>
-      <div>
-          Message
-        </div>
-        // slice(-5) gives us the five most recent messages
-        <ul>{ this.state.messages.map( (msg, idx) =>
-          <li key={'msg-' + idx }>{msg.url}</li>
-         )}</ul>;
-
-      </div>
-    );
-  }
-}
-**/
