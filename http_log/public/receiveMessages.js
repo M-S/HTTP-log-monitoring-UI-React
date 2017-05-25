@@ -2,8 +2,9 @@ import {observer} from "mobx-react";
 import {observable} from "mobx";
 import React from 'react';
 import { render } from 'react-dom';
-import { Grid, Row, Col, Panel, ListGroup,ListGroupItem, Table } from 'react-bootstrap';
+import { Grid, Row, Col, Panel, ListGroup,ListGroupItem, Table} from 'react-bootstrap';
 import {moment} from 'moment';
+import styles from './components/styles.css'
 
 @observer
 class Message extends React.Component {
@@ -180,11 +181,13 @@ class Message extends React.Component {
         <Grid>
         <Row>
         <Col md={6}>
-        <ListGroup>
-          <ListGroupItem>Top most Hit</ListGroupItem>
-          <ListGroupItem>{this.state.HighestHitPage}</ListGroupItem>
-          <ListGroupItem>{this.state.HighestHitCount}</ListGroupItem>
-        </ListGroup>
+        <Panel header="Top most Page Hit">
+          <ListGroup>
+            <ListGroupItem>{this.state.HighestHitPage}</ListGroupItem>
+            <ListGroupItem>{this.state.HighestHitCount}</ListGroupItem>
+          </ListGroup>
+        </Panel>
+
         </Col>
         </Row>
           <Row className="show-grid">
