@@ -94,7 +94,7 @@ class Message extends React.Component {
                 console.log("new start time:" + startTimeSeconds)
                 startHitCount = HitCount
                 console.log("new start hit count :" + startHitCount)
-                var HitMessage = " - hits"+ HitCount+" ,triggered at time : "+ dateHit.toString()
+                var HitMessage = " - hits "+ HitCount+" ,triggered at time : "+ dateHit.toString()
                 console.log(HitMessage)
                 this.setState({
                   HitsAlert:this.state.HitsAlert.concat(HitMessage)
@@ -122,7 +122,7 @@ class Message extends React.Component {
               //Find the page with  most number of hits
               var HitPage=""
               var HighestHit = Math.max(mainArray.length,newsArray.length,aboutArray.length,blogArray.length,blogTechArray.length,blogCookArray.length,blogRandomArray.length)
-              console.log("HighestHit: "+HighestHit)
+              //console.log("HighestHit: "+HighestHit)
               switch (HighestHit) {
                 case mainArray.length:
                   HitPage="https://www.example.com/"
@@ -147,11 +147,9 @@ class Message extends React.Component {
                   break;
                 default:HitPage=""
               }
-              console.log("HitPage: "+HitPage)
+              //console.log("HitPage: "+HitPage)
 
-
-
-            //remove the last array object from singleMessage to save memory
+              //remove the last array object from singleMessage to save memory
             this.state.singleMessage.pop();
             //set values to the state
             	this.setState({
@@ -167,7 +165,6 @@ class Message extends React.Component {
                 blogRandomCount:blogRandomArray.length,
                 HighestHitPage:HitPage,
                 HighestHitCount:HighestHit
-
                 })
           }
         }
@@ -238,7 +235,7 @@ class Message extends React.Component {
                   </tr>
                   <tr>
                     <td></td>
-                    <td>TOTAL HitsAlert</td>
+                    <td>TOTAL HITS</td>
                     <td>{this.state.totalHits}</td>
                   </tr>
                 </tbody>
@@ -265,7 +262,7 @@ class Message extends React.Component {
           <Col md={6}>
           <ListGroup>
             {this.state.HitsAlert.map((alert) =>
-            <ListGroupItem key={alert.toString()}><span>HIGH TRAFFIC ALERT: </span>{alert}</ListGroupItem> )}
+            <ListGroupItem key={alert.toString()}><span>HIGH TRAFFIC ALERT</span>{alert}</ListGroupItem> )}
 
           </ListGroup>
           </Col>
