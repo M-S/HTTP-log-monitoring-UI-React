@@ -2,7 +2,7 @@ import {observer} from "mobx-react";
 import {observable} from "mobx";
 import React from 'react';
 import { render } from 'react-dom';
-import { Grid, Row, Col, Panel, ListGroup,ListGroupItem, Table} from 'react-bootstrap';
+import { Grid, Row, Col, Panel, ListGroup,ListGroupItem, Table, Accordion} from 'react-bootstrap';
 import {moment} from 'moment';
 import styles from './components/styles.css'
 
@@ -177,103 +177,118 @@ class Message extends React.Component {
     render() {
       return (
         <div>
+          <Grid>
+            <Row>
+              <Col md={7}>
+              <h2>Top Hit</h2>
+              <Panel className={styles.topPanel}>
+                <Row>
+                  <Col md={9}>
+                      <h3 className={styles.topHitLink}>kjdfhksjlfjlskdj{this.state.HighestHitPage}</h3>
+                  </Col>
+                  <Col md={3}>
+                    <Panel className={styles.topHits}>
+                      <h1>{this.state.HighestHitCount}<span><h4>Hits</h4></span></h1>
+                    </Panel>
+                  </Col>
 
-        <Grid>
-        <Row>
-        <Col md={6}>
-        <Panel header="Top most Page Hit">
-          <ListGroup>
-            <ListGroupItem>{this.state.HighestHitPage}</ListGroupItem>
-            <ListGroupItem>{this.state.HighestHitCount}</ListGroupItem>
-          </ListGroup>
-        </Panel>
+                </Row>
+                </Panel>
+              </Col>
+              <Col md={5}>
+                <h2>HTTP traffic</h2>
+                <Accordion>
+                  <Panel header="Click to see Live status"eventKey="1" className={styles.liveStatusPanel}>
+                      <ListGroup>
+                        {this.state.singleMessage.map( (msg, idx) =>
+                          <ListGroupItem key={'msg-' + idx }>{msg.url}</ListGroupItem>
+                        )}
+                        {this.state.singleMessage.map( (msg, idx) =>
+                          <ListGroupItem key={'msg-' + idx }>{msg.ip}</ListGroupItem>
+                        )}
+                        {this.state.singleMessage.map( (msg, idx) =>
+                          <ListGroupItem key={'msg-' + idx }>{msg.dateTime}</ListGroupItem>
+                        )}
+                      </ListGroup>
+                    </Panel>
+                    <Panel header="High Traffic Alert Messages" eventKey="2" className={styles.liveStatusPanel}>
+                    <ListGroup>
+                      {this.state.HitsAlert.map((alert) =>
+                      <ListGroupItem key={alert.toString()}><span>HIGH TRAFFIC ALERT</span>{alert}</ListGroupItem> )}
+                    </ListGroup>
+                    </Panel>
+                  </Accordion>
+              </Col>
+            </Row>
+            <Row className="show-grid">
+              <Col md={7}>
+              <h2>Hits Per Page</h2>
+                <Panel className={styles.tablePanel}>
+                  <Table striped bordered condensed hover className={styles.tableInside}>
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Pages</th>
+                        <th>Hits</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>1</td>
+                        <td>'https://www.example.com/'</td>
+                        <td>{this.state.mainPageCount}</td>
+                      </tr>
+                      <tr>
+                        <td>2</td>
+                        <td>'https://www.example.com/news'</td>
+                        <td>{this.state.newsPageCount}</td>
+                      </tr>
+                      <tr>
+                        <td>3</td>
+                        <td>'https://www.example.com/about'</td>
+                        <td>{this.state.aboutPageCount}</td>
+                      </tr>
+                      <tr>
+                        <td>4</td>
+                        <td>'https://www.example.com/blog'</td>
+                        <td>{this.state.blogPageCount}</td>
+                      </tr>
+                      <tr>
+                        <td>5</td>
+                        <td>'https://www.example.com/blog/tech'</td>
+                        <td>{this.state.blogTechPageCount}</td>
+                      </tr>
+                      <tr>
+                        <td>6</td>
+                        <td>'https://www.example.com/blog/cooking'</td>
+                        <td>{this.state.blogCookPageCount}</td>
+                      </tr>
+                      <tr>
+                        <td>7</td>
+                        <td>'https://www.example.com/news'</td>
+                        <td>{this.state.blogRandomCount}</td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td>TOTAL HITS</td>
+                        <td>{this.state.totalHits}</td>
+                      </tr>
+                    </tbody>
+                  </Table>
+                </Panel>
+                </Col>
+            </Row>
+            <Row>
+              <Col md={6}>
 
-        </Col>
-        </Row>
-          <Row className="show-grid">
-          <Col md={8}>
-              <Table striped bordered condensed hover>
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Pages</th>
-                    <th>Hits</th>
-                    </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>'https://www.example.com/'</td>
-                    <td>{this.state.mainPageCount}</td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>'https://www.example.com/news'</td>
-                    <td>{this.state.newsPageCount}</td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>'https://www.example.com/about'</td>
-                    <td>{this.state.aboutPageCount}</td>
-                  </tr>
-                  <tr>
-                    <td>4</td>
-                    <td>'https://www.example.com/blog'</td>
-                    <td>{this.state.blogPageCount}</td>
-                  </tr>
-                  <tr>
-                    <td>5</td>
-                    <td>'https://www.example.com/blog/tech'</td>
-                    <td>{this.state.blogTechPageCount}</td>
-                  </tr>
-                  <tr>
-                    <td>6</td>
-                    <td>'https://www.example.com/blog/cooking'</td>
-                    <td>{this.state.blogCookPageCount}</td>
-                  </tr>
-                  <tr>
-                    <td>7</td>
-                    <td>'https://www.example.com/news'</td>
-                    <td>{this.state.blogRandomCount}</td>
-                  </tr>
-                  <tr>
-                    <td></td>
-                    <td>TOTAL HITS</td>
-                    <td>{this.state.totalHits}</td>
-                  </tr>
-                </tbody>
-              </Table>
-            </Col>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6}>
 
-          </Row>
-          <Row>
-          <Col md={6}>
-          <ListGroup>
-            {this.state.singleMessage.map( (msg, idx) =>
-              <ListGroupItem key={'msg-' + idx }>{msg.url}</ListGroupItem>
-            )}
-            {this.state.singleMessage.map( (msg, idx) =>
-              <ListGroupItem key={'msg-' + idx }>{msg.ip}</ListGroupItem>
-            )}
-            {this.state.singleMessage.map( (msg, idx) =>
-              <ListGroupItem key={'msg-' + idx }>{msg.dateTime}</ListGroupItem>
-            )}
-          </ListGroup>
-          </Col>
-          </Row>
-          <Row>
-          <Col md={6}>
-          <ListGroup>
-            {this.state.HitsAlert.map((alert) =>
-            <ListGroupItem key={alert.toString()}><span>HIGH TRAFFIC ALERT</span>{alert}</ListGroupItem> )}
-
-          </ListGroup>
-          </Col>
-          </Row>
-        </Grid>
-
-
-
+              </Col>
+            </Row>
+          </Grid>
         </div>
       );
     }

@@ -10,9 +10,7 @@ import {PageHeader,Jumbotron} from 'react-bootstrap'
     return(
       <div>
         <PageHeader className={styles.pageHeader}  >DASHBOARD <small className={styles.pageHeader} >> HTTP traffic log</small></PageHeader>
-        <Jumbotron>
           <Message />
-        </Jumbotron>
       </div>
     );
 

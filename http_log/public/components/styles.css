@@ -2,8 +2,33 @@
 *{
 
 }
+
 .pageHeader{
   padding: 1%;
-  background-color:#048998;
+  background-color:#EACF79;
+  color: black;
+}
+.topPanel{
+  background-color:#31588A;
+  padding-top: 2%;
+}
+
+.topHitLink{
   color:white;
+  padding-top:6%;
+}
+.topHits{
+  background-color: white;
+  text-align: center;
+  color:black;
+}
+.liveStatusPanel{
+  background-color: #222831;
+  padding: 2%;
+}
+.tablePanel{
+  background-color: #0092CA;
+}
+.tableInside{
+  background-color:#EEEEEE;
 }
