@@ -5,6 +5,13 @@ import { render } from 'react-dom';
 import { Grid, Row, Col, Panel, ListGroup,ListGroupItem, Table, Accordion} from 'react-bootstrap';
 import {moment} from 'moment';
 import styles from './components/styles.css'
+import FaPlusSquareO from 'react-icons/lib/fa/plus-square-o'
+import FaFlag from 'react-icons/lib/fa/flag'
+import FaHourglassO from 'react-icons/lib/fa/hourglass-o'
+import FaList from 'react-icons/lib/fa/list'
+import FaDashboard from 'react-icons/lib/fa/dashboard'
+import FaBullseye from 'react-icons/lib/fa/bullseye'
+import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts'
 
 @observer
 class Message extends React.Component {
@@ -40,7 +47,8 @@ class Message extends React.Component {
        blogRandomCount: 0,
        HitsAlert:[],
        HighestHitCount:0,
-       HighestHitPage:""
+       HighestHitPage:"",
+       timeElapsed:0
      }
    }
 
@@ -56,6 +64,8 @@ class Message extends React.Component {
       var HitCount=0
       var startHitCount
       var startTimeSeconds=0
+      var prevTime=0
+      var timeElapse=0
 
       /***Establishes websocket connection ****/
     	this.connection = new WebSocket('ws://localhost:8000/');
@@ -71,6 +81,7 @@ class Message extends React.Component {
               if(HitCount==1){
                 var startTime = new Date()
                 startTimeSeconds=startTime.getTime()/1000
+                prevTime = startTimeSeconds
                 console.log("start time: " + startTime.toString())
                 startHitCount = HitCount
                 console.log("start Hit Count: " + startHitCount)
@@ -80,6 +91,7 @@ class Message extends React.Component {
               var date = new Date(currentTime)
               var currentTimeSeconds = date.getTime()/1000
               var timeDiff= Math.round(currentTimeSeconds-startTimeSeconds)
+              timeElapse = Math.round(currentTimeSeconds-prevTime)
               //console.log("Time diff: "+ timeDiff)
 
 
@@ -126,25 +138,25 @@ class Message extends React.Component {
               //console.log("HighestHit: "+HighestHit)
               switch (HighestHit) {
                 case mainArray.length:
-                  HitPage="https://www.example.com/"
+                  HitPage="www.example.com/"
                   break;
                 case newsArray.length:
-                  HitPage="https://www.example.com/news"
+                  HitPage="www.example.com/news"
                   break;
                 case aboutArray.length:
-                  HitPage="https://www.example.com/about"
+                  HitPage="www.example.com/about"
                   break;
                 case blogArray.length:
-                  HitPage="https://www.example.com/blog"
+                  HitPage="www.example.com/blog"
                   break;
                 case blogTechArray.length:
-                  HitPage="https://www.example.com/blog/tech"
+                  HitPage="www.example.com/blog/tech"
                   break;
                 case blogCookArray.length:
-                  HitPage="https://www.example.com/blog/cooking"
+                  HitPage="www.example.com/blog/cooking"
                   break;
                 case blogRandomArray.length:
-                  HitPage="https://www.example.com/blog/random"
+                  HitPage="www.example.com/blog/random"
                   break;
                 default:HitPage=""
               }
@@ -165,9 +177,12 @@ class Message extends React.Component {
                 blogCookPageCount:blogCookArray.length,
                 blogRandomCount:blogRandomArray.length,
                 HighestHitPage:HitPage,
-                HighestHitCount:HighestHit
+                HighestHitCount:HighestHit,
+                timeElapsed:timeElapse
+
                 })
           }
+          setInterval(() => this.forceUpdate(), 1000);
         }
 
     componentWillUnmount() {
@@ -175,54 +190,50 @@ class Message extends React.Component {
     }
     //render UI
     render() {
+      var chartData=[]
+      chartData.push({  time:this.state.timeElapsed,
+        hits:this.state.totalHits})
+
       return (
         <div>
           <Grid>
             <Row>
-              <Col md={7}>
-              <h2>Top Hit</h2>
-              <Panel className={styles.topPanel}>
-                <Row>
-                  <Col md={9}>
-                      <h3 className={styles.topHitLink}>kjdfhksjlfjlskdj{this.state.HighestHitPage}</h3>
-                  </Col>
-                  <Col md={3}>
-                    <Panel className={styles.topHits}>
-                      <h1>{this.state.HighestHitCount}<span><h4>Hits</h4></span></h1>
-                    </Panel>
-                  </Col>
-
-                </Row>
+              <Col md={4}>
+                <Panel className={styles.totHits}>
+                  <h2><FaPlusSquareO/>    Total Hits</h2>
+                  <h1>{this.state.totalHits}</h1>
                 </Panel>
               </Col>
               <Col md={5}>
-                <h2>HTTP traffic</h2>
-                <Accordion>
-                  <Panel header="Click to see Live status"eventKey="1" className={styles.liveStatusPanel}>
-                      <ListGroup>
-                        {this.state.singleMessage.map( (msg, idx) =>
-                          <ListGroupItem key={'msg-' + idx }>{msg.url}</ListGroupItem>
-                        )}
-                        {this.state.singleMessage.map( (msg, idx) =>
-                          <ListGroupItem key={'msg-' + idx }>{msg.ip}</ListGroupItem>
-                        )}
-                        {this.state.singleMessage.map( (msg, idx) =>
-                          <ListGroupItem key={'msg-' + idx }>{msg.dateTime}</ListGroupItem>
-                        )}
-                      </ListGroup>
-                    </Panel>
-                    <Panel header="High Traffic Alert Messages" eventKey="2" className={styles.liveStatusPanel}>
-                    <ListGroup>
-                      {this.state.HitsAlert.map((alert) =>
-                      <ListGroupItem key={alert.toString()}><span>HIGH TRAFFIC ALERT</span>{alert}</ListGroupItem> )}
-                    </ListGroup>
-                    </Panel>
-                  </Accordion>
+                <Panel className={styles.topPanel}>
+                        <h2><FaFlag/>  Top Hit Page</h2>
+                        <h4>{this.state.HighestHitCount} hits</h4>
+                        <h3 className={styles.topHitLink}>{this.state.HighestHitPage}</h3>
+                  </Panel>
+              </Col>
+              <Col md={3}>
+                <Panel className={styles.timePanel}>
+                  <h2><FaHourglassO/> Time elapsed</h2>
+                  <h1>{this.state.timeElapsed}</h1>
+                </Panel>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={8}>
+              <LineChart width={600} height={300} data={chartData}
+                    margin={{top: 5, right: 30, left: 20, bottom: 5}}>
+               <XAxis dataKey="hits"/>
+               <YAxis/>
+               <CartesianGrid strokeDasharray="3 3"/>
+               <Tooltip/>
+               <Legend />
+               <Line type="monotone" dataKey="hits" stroke="#8884d8" activeDot={{r: 8}}/>
+              </LineChart>
               </Col>
             </Row>
             <Row className="show-grid">
               <Col md={7}>
-              <h2>Hits Per Page</h2>
+              <h2><FaBullseye/> Hits Per Page</h2>
                 <Panel className={styles.tablePanel}>
                   <Table striped bordered condensed hover className={styles.tableInside}>
                     <thead>
@@ -277,16 +288,30 @@ class Message extends React.Component {
                   </Table>
                 </Panel>
                 </Col>
-            </Row>
-            <Row>
-              <Col md={6}>
-
-              </Col>
-            </Row>
-            <Row>
-              <Col md={6}>
-
-              </Col>
+                <Col md={4}>
+                  <h2><FaDashboard/> HTTP traffic</h2>
+                  <Accordion>
+                    <Panel header="Click to see Live status"eventKey="1" className={styles.liveStatusPanel}>
+                        <ListGroup>
+                          {this.state.singleMessage.map( (msg, idx) =>
+                            <ListGroupItem key={'msg-' + idx }>{msg.url}</ListGroupItem>
+                          )}
+                          {this.state.singleMessage.map( (msg, idx) =>
+                            <ListGroupItem key={'msg-' + idx }>{msg.ip}</ListGroupItem>
+                          )}
+                          {this.state.singleMessage.map( (msg, idx) =>
+                            <ListGroupItem key={'msg-' + idx }>{msg.dateTime}</ListGroupItem>
+                          )}
+                        </ListGroup>
+                      </Panel>
+                      <Panel header="High Traffic Alert Messages" eventKey="2" className={styles.liveStatusPanel}>
+                      <ListGroup>
+                        {this.state.HitsAlert.map((alert) =>
+                        <ListGroupItem key={alert.toString()}><span>HIGH TRAFFIC ALERT</span>{alert}</ListGroupItem> )}
+                      </ListGroup>
+                      </Panel>
+                    </Accordion>
+                </Col>
             </Row>
           </Grid>
         </div>

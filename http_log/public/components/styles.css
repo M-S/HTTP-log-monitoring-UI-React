@@ -5,13 +5,37 @@
 
 .pageHeader{
   padding: 1%;
-  background-color:#EACF79;
-  color: black;
+  padding-left: 20%;
+  background-color:#003355;
+  color: white;
+}
+.pageHeaderSmall{
+    padding: 1%;
+    background-color:#003355;
+    color: white;
+}
+.totHits{
+  background-color:#CD5C5C;
+  padding: 2%;
+  color:white;
+  text-align: center;
+  height:180px
 }
 .topPanel{
-  background-color:#31588A;
-  padding-top: 2%;
+  background-color:#96D38C;
+  padding: 2%;
+  color:white;
+  text-align: center;
+  height:180px;
 }
+.timePanel{
+  background-color:#04536C;
+  padding: 2%;
+  color:white;
+  text-align: center;
+  height:180px;
+}
+
 
 .topHitLink{
   color:white;
@@ -27,7 +51,7 @@
   padding: 2%;
 }
 .tablePanel{
-  background-color: #0092CA;
+  background-color: #31588A;
 }
 .tableInside{
   background-color:#EEEEEE;
