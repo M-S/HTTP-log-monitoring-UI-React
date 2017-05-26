@@ -234,29 +234,25 @@ class Message extends React.Component {
         <div>
           <Grid>
             <Row>
+            <h2 className={styles.white} ><FaLineChart/> Stats</h2>
+            <Panel className={styles.panelBox}>
+              <Col md={2}>
+                  <h2 className={styles.panelTitle} ><FaPlusSquareO/>    Total Hits</h2>
+                  <h1 className={styles.panelStats} >{this.state.totalHits}</h1>
+              </Col>
+              <Col md={7}>
+                        <h2 className={styles.panelTitle}><FaFlag/>  Top Hit Page</h2>
+                        <h3 className={styles.panelStats} >{this.state.HighestHitPage} [{this.state.HighestHitCount}]</h3>
+              </Col>
               <Col md={3}>
-                <Panel className={styles.totHits}>
-                  <h2><FaPlusSquareO/>    Total Hits</h2>
-                  <h1>{this.state.totalHits}</h1>
-                </Panel>
+                  <h2 className={styles.panelTitle}><FaHourglassO/> Time elapsed</h2>
+                  <h2 className={styles.panelStats} >{this.state.timeElapsedDays} days, {this.state.timeElapsedHour}:{this.state.timeElapsedMin}:{this.state.timeElapsedSec}</h2>
               </Col>
-              <Col md={5}>
-                <Panel className={styles.topPanel}>
-                        <h2><FaFlag/>  Top Hit Page</h2>
-                        <h3 className={styles.topHitLink}>{this.state.HighestHitPage} [{this.state.HighestHitCount}]</h3>
-                  </Panel>
-              </Col>
-              <Col md={4}>
-                <Panel className={styles.timePanel}>
-                  <h2><FaHourglassO/> Time elapsed</h2>
-                  <h2>{this.state.timeElapsedDays} days, {this.state.timeElapsedHour}:{this.state.timeElapsedMin}:{this.state.timeElapsedSec}</h2>
-                </Panel>
-              </Col>
+              </Panel>
             </Row>
             <Row>
               <Col md={12}>
-              <Panel>
-              <h2><FaLineChart/> Live chart <span><h4> (calculated every 1 minute)</h4></span></h2>
+              <h2 className={styles.white} ><FaLineChart/> Live chart <span><h4> (calculated every 1 minute)</h4></span></h2>
                 <ResponsiveContainer height={300} width="100%">
                   <LineChart data={this.state.chart}
                         margin={{top: 5, right: 30, left: 20, bottom: 5}}>
@@ -268,14 +264,13 @@ class Message extends React.Component {
                    <Line type="monotone" dataKey="hits" stroke="#8884d8" activeDot={{r: 8}}/>
                   </LineChart>
                 </ResponsiveContainer>
-                </Panel>
               </Col>
             </Row>
             <Row className="show-grid">
               <Col md={7}>
-              <h2><FaBullseye/> Hits Per Page</h2>
-                <Panel className={styles.tablePanel}>
-                  <Table striped bordered condensed hover className={styles.tableInside}>
+              <h2 className={styles.white}><FaBullseye/> Hits Per Page</h2>
+
+                  <Table responsive className={styles.tableInside}>
                     <thead>
                       <tr>
                         <th>#</th>
@@ -326,10 +321,10 @@ class Message extends React.Component {
                       </tr>
                     </tbody>
                   </Table>
-                </Panel>
+
                 </Col>
                 <Col md={4}>
-                  <h2><FaDashboard/> HTTP traffic</h2>
+                  <h2 className={styles.white}><FaDashboard/> HTTP traffic</h2>
                   <Accordion>
                     <Panel header="Click to see Live status"eventKey="1" className={styles.liveStatusPanel}>
                         <ListGroup>

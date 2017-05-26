@@ -1,44 +1,55 @@
 
-*{
-
+body{
+  background: #222;
+  	font: 16px 'Open Sans', sans-serif;
+}
+.white{
+  color:white;
+  font-size: 18px;
 }
 
 .pageHeader{
   padding: 1%;
   padding-left: 20%;
-  background-color:#003355;
-  color: white;
+  color: #526494;;
+
+}
+.pageHeader:hover{
+  color: #604484;
 }
 .pageHeaderSmall{
     padding: 1%;
-    background-color:#003355;
     color: white;
 }
-.totHits{
-  background-color:#CD5C5C;
-  padding: 2%;
-  color:white;
-  text-align: center;
-  height:180px
-}
-.topPanel{
-  background-color:#96D38C;
-  padding: 2%;
-  color:white;
-  text-align: center;
-  height:180px;
-}
-.timePanel{
-  background-color:#04536C;
-  padding: 2%;
-  color:white;
-  text-align: center;
-  height:180px;
-}
 
+.panelBox{
+  background: linear-gradient(#526494, #604484);
+	margin: 10px auto 0;
+	border-radius: 5px;
+	width: 100%;
+  border-color:#526494;
+  color:white;
+  height:150px;
+}
+.panelTitle{
+  font-size: 18px;
+}
+.panelTitle:hover{
+  color: #7affec;
+}
+.panelStats{
+  font-size: 38px;
+	font-weight: bold;
+	line-height: 1.2;
+}
+.panelStats:hover{
+  color: #7affec;
+}
 
 .topHitLink{
-  color:white;
+  font-size: 24px;
+	font-weight: bold;
+	line-height: 1.2;
 }
 .topHits{
   background-color: white;
@@ -46,12 +57,18 @@
   color:black;
 }
 .liveStatusPanel{
-  background-color: #222831;
+  background: linear-gradient(#526494, #604484);
   padding: 2%;
 }
 .tablePanel{
-  background-color: #31588A;
+  background-color: #405559;
 }
 .tableInside{
-  background-color:#EEEEEE;
+  background:linear-gradient(#526494, #604484);
+  color:white;
+  border-color:#526494;
+}
+.tableInside:hover{
+  background: linear-gradient(#526494, #604484);
+  color:#7affec;
 }
