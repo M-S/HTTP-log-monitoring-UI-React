@@ -11,7 +11,8 @@ import FaHourglassO from 'react-icons/lib/fa/hourglass-o'
 import FaList from 'react-icons/lib/fa/list'
 import FaDashboard from 'react-icons/lib/fa/dashboard'
 import FaBullseye from 'react-icons/lib/fa/bullseye'
-import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts'
+import FaLineChart from 'react-icons/lib/fa/line-chart'
+import {ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts'
 
 @observer
 class Message extends React.Component {
@@ -48,7 +49,12 @@ class Message extends React.Component {
        HitsAlert:[],
        HighestHitCount:0,
        HighestHitPage:"",
-       timeElapsed:0
+       timeElapsed:0,
+       timeElapsedSec:0,
+       timeElapsedMin:0,
+       timeElapsedHour:0,
+       timeElapsedDays:0,
+       chart:[]
      }
    }
 
@@ -66,6 +72,7 @@ class Message extends React.Component {
       var startTimeSeconds=0
       var prevTime=0
       var timeElapse=0
+      var chartData=[{time:0,hits:0}]
 
       /***Establishes websocket connection ****/
     	this.connection = new WebSocket('ws://localhost:8000/');
@@ -92,7 +99,15 @@ class Message extends React.Component {
               var currentTimeSeconds = date.getTime()/1000
               var timeDiff= Math.round(currentTimeSeconds-startTimeSeconds)
               timeElapse = Math.round(currentTimeSeconds-prevTime)
-              //console.log("Time diff: "+ timeDiff)
+              var seconds = Math.round(timeElapse%60)//get seconds
+              timeElapse = Math.floor(timeElapse/60)//remove seconds from date
+              var minutes = Math.round(timeElapse%60)//get minutes
+              timeElapse= Math.floor(timeElapse/60)//remove minutes from the date
+              var hours = Math.round(timeElapse%24)//get hours
+              timeElapse = Math.floor(timeElapse/24)//remove hours from the date
+              var days = timeElapse//rest of the timeElapse is number of days
+
+
 
 
       //Whenever total traffic for the past 2 minutes exceeds a certain number on average,
@@ -114,6 +129,28 @@ class Message extends React.Component {
                 })
               }
             }
+            //Chart data to be displayed
+            if(Math.abs(timeDiff)%60==0 && Math.abs(timeDiff)!==0){
+              if(chartData.length>1){
+                chartData.shift()
+              }
+              var d= new Date()
+              var timeNow = d.toLocaleTimeString()
+              chartData.push({time:timeNow,
+                hits:this.state.totalHits})
+              this.setState({
+                chart:this.state.chart.concat(chartData)
+              })
+              var chartArray = this.state.chart
+              if(chartArray.length>10){
+                chartArray.shift()
+                this.setState({
+                  chart:chartArray
+                })
+              }
+
+            }
+
 
             /****To filter the data into respective arrays one by one***/
             if(newArray[i].url === "https://www.example.com/" ){
@@ -178,11 +215,13 @@ class Message extends React.Component {
                 blogRandomCount:blogRandomArray.length,
                 HighestHitPage:HitPage,
                 HighestHitCount:HighestHit,
-                timeElapsed:timeElapse
-
+                timeElapsedSec:seconds,
+                timeElapsedMin:minutes,
+                timeElapsedHour:hours,
+                timeElapsedDays:days
                 })
           }
-          setInterval(() => this.forceUpdate(), 1000);
+
         }
 
     componentWillUnmount() {
@@ -190,15 +229,12 @@ class Message extends React.Component {
     }
     //render UI
     render() {
-      var chartData=[]
-      chartData.push({  time:this.state.timeElapsed,
-        hits:this.state.totalHits})
 
       return (
         <div>
           <Grid>
             <Row>
-              <Col md={4}>
+              <Col md={3}>
                 <Panel className={styles.totHits}>
                   <h2><FaPlusSquareO/>    Total Hits</h2>
                   <h1>{this.state.totalHits}</h1>
@@ -207,28 +243,32 @@ class Message extends React.Component {
               <Col md={5}>
                 <Panel className={styles.topPanel}>
                         <h2><FaFlag/>  Top Hit Page</h2>
-                        <h4>{this.state.HighestHitCount} hits</h4>
-                        <h3 className={styles.topHitLink}>{this.state.HighestHitPage}</h3>
+                        <h3 className={styles.topHitLink}>{this.state.HighestHitPage} [{this.state.HighestHitCount}]</h3>
                   </Panel>
               </Col>
-              <Col md={3}>
+              <Col md={4}>
                 <Panel className={styles.timePanel}>
                   <h2><FaHourglassO/> Time elapsed</h2>
-                  <h1>{this.state.timeElapsed}</h1>
+                  <h2>{this.state.timeElapsedDays} days, {this.state.timeElapsedHour}:{this.state.timeElapsedMin}:{this.state.timeElapsedSec}</h2>
                 </Panel>
               </Col>
             </Row>
             <Row>
-              <Col md={8}>
-              <LineChart width={600} height={300} data={chartData}
-                    margin={{top: 5, right: 30, left: 20, bottom: 5}}>
-               <XAxis dataKey="hits"/>
-               <YAxis/>
-               <CartesianGrid strokeDasharray="3 3"/>
-               <Tooltip/>
-               <Legend />
-               <Line type="monotone" dataKey="hits" stroke="#8884d8" activeDot={{r: 8}}/>
-              </LineChart>
+              <Col md={12}>
+              <Panel>
+              <h2><FaLineChart/> Live chart <span><h4> (calculated every 1 minute)</h4></span></h2>
+                <ResponsiveContainer height={300} width="100%">
+                  <LineChart data={this.state.chart}
+                        margin={{top: 5, right: 30, left: 20, bottom: 5}}>
+                   <XAxis dataKey="time"/>
+                   <YAxis/>
+                   <CartesianGrid strokeDasharray="3 3"/>
+                   <Tooltip/>
+                   <Legend />
+                   <Line type="monotone" dataKey="hits" stroke="#8884d8" activeDot={{r: 8}}/>
+                  </LineChart>
+                </ResponsiveContainer>
+                </Panel>
               </Col>
             </Row>
             <Row className="show-grid">
