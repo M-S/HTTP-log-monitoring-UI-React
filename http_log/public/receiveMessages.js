@@ -101,6 +101,7 @@ class Message extends React.Component {
               var date = new Date(currentTime)
               var currentTimeSeconds = date.getTime()/1000
               var timeDiff= Math.round(currentTimeSeconds-startTimeSeconds)
+              //To record time elapsed
               timeElapse = Math.round(currentTimeSeconds-prevTime)
               var seconds = Math.round(timeElapse%60)//get seconds
               timeElapse = Math.floor(timeElapse/60)//remove seconds from date
@@ -111,16 +112,14 @@ class Message extends React.Component {
               var days = timeElapse//rest of the timeElapse is number of days
 
 
-
-
       //Whenever total traffic for the past 2 minutes exceeds a certain number on average,
       //add a message saying `High traffic generated an alert - hits = {value}, triggered at {time}`
+      //also displays modal alert box
             if(Math.abs(timeDiff)>2*60){
               console.log("Time diff >2 minutes ")
               if((HitCount+startHitCount)/2 >150){
                 var timeHit = newArray[i].dateTime
                 var dateHit = new Date(timeHit)
-
                 startTimeSeconds=currentTimeSeconds
                 console.log("new start time:" + startTimeSeconds)
                 startHitCount = HitCount
@@ -153,11 +152,10 @@ class Message extends React.Component {
                   chart:chartArray
                 })
               }
-
             }
 
-
-            /****To filter the data into respective arrays one by one***/
+            /****To filter the data into respective arrays one by one ***/
+            //This is to display table data and to find the highest hit page
             if(newArray[i].url === "https://www.example.com/" ){
 		            mainArray.push(newArray[i]);
               }else if (newArray[i].url === "https://www.example.com/news") {
@@ -202,11 +200,10 @@ class Message extends React.Component {
                   break;
                 default:HitPage=""
               }
-              //console.log("HitPage: "+HitPage)
 
               //remove the last array object from singleMessage to save memory
             this.state.singleMessage.pop();
-            //set values to the state
+            //set values to the rest of state
             	this.setState({
               	messages : this.state.messages.concat(JSON.parse(evt.data)),
                 singleMessage :this.state.singleMessage.concat(JSON.parse(evt.data)),
@@ -226,12 +223,12 @@ class Message extends React.Component {
                 timeElapsedDays:days
                 })
           }
-
         }
 
     componentWillUnmount() {
        this.connection.close()
     }
+
     //render UI
     render() {
       let mClose = () => this.setState({ mShow: false })
@@ -239,49 +236,47 @@ class Message extends React.Component {
         <div>
           <Grid>
             <Row>
-            <h2 className={styles.white} ><FaLineChart/> Stats</h2>
-            <Col md={2}>
-            <Panel className={styles.panelBox}>
-                  <h2 className={styles.panelTitle} ><FaPlusSquareO/>    Total Hits</h2>
-                  <h1 className={styles.panelStats} >{this.state.totalHits}</h1>
-              </Panel>
+              <h2 className={styles.white} ><FaLineChart/> Stats</h2>
+              <Col md={2}>
+                <Panel className={styles.panelBox}>
+                      <h2 className={styles.panelTitle} ><FaPlusSquareO/>    Total Hits</h2>
+                      <h1 className={styles.panelStats} >{this.state.totalHits}</h1>
+                </Panel>
               </Col>
               <Col md={6}>
-              <Panel className={styles.panelBox}>
-                        <h2 className={styles.panelTitle}><FaFlag/>  Top Hit Page</h2>
-                        <h3 className={styles.topHitLink} >{this.state.HighestHitPage} [{this.state.HighestHitCount}]</h3>
-              </Panel>
+                <Panel className={styles.panelBox}>
+                  <h2 className={styles.panelTitle}><FaFlag/>  Top Hit Page</h2>
+                  <h3 className={styles.topHitLink} >{this.state.HighestHitPage} [{this.state.HighestHitCount}]</h3>
+                </Panel>
               </Col>
               <Col md={4}>
-              <Panel className={styles.panelBox}>
+                <Panel className={styles.panelBox}>
                   <h2 className={styles.panelTitle}><FaHourglassO/> Time elapsed</h2>
                   <h2 className={styles.panelStats} >{this.state.timeElapsedDays} days, {this.state.timeElapsedHour}:{this.state.timeElapsedMin}:{this.state.timeElapsedSec}</h2>
-              </Panel>
+                </Panel>
               </Col>
             </Row>
             <Row>
-            <h2 className={styles.white} ><FaLineChart/> Live chart <span><h4> (calculated every 1 minute)</h4></span></h2>
+              <h2 className={styles.white} ><FaLineChart/> Live chart <span><h4> (calculated every 1 minute)</h4></span></h2>
               <Col md={12} >
-              <Panel className={styles.chart} >
-
-                <ResponsiveContainer height={300} width="100%" >
-                  <LineChart data={this.state.chart}
-                        margin={{top: 5, right: 30, left: 20, bottom: 5}}>
-                   <XAxis dataKey="time"/>
-                   <YAxis/>
-                   <CartesianGrid strokeDasharray="3 3"/>
-                   <Tooltip/>
-                   <Legend />
-                   <Line type="monotone" dataKey="hits" stroke="#8884d8" activeDot={{r: 8}}/>
-                  </LineChart>
-                </ResponsiveContainer>
-                </Panel>
+                <Panel className={styles.chart}>
+                    <ResponsiveContainer height={300} width="100%" >
+                      <LineChart data={this.state.chart}
+                            margin={{top: 5, right: 30, left: 20, bottom: 5}}>
+                       <XAxis dataKey="time"/>
+                       <YAxis/>
+                       <CartesianGrid strokeDasharray="3 3"/>
+                       <Tooltip/>
+                       <Legend />
+                       <Line type="monotone" dataKey="hits" stroke="#8884d8" activeDot={{r: 8}}/>
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </Panel>
               </Col>
             </Row>
             <Row className="show-grid">
               <Col md={7}>
               <h2 className={styles.white}><FaBullseye/> Hits Per Page</h2>
-
                   <Table responsive className={styles.tableInside}>
                     <thead>
                       <tr>
@@ -333,7 +328,6 @@ class Message extends React.Component {
                       </tr>
                     </tbody>
                   </Table>
-
                 </Col>
                 <Col md={5}>
                   <h2 className={styles.white}><FaDashboard/> HTTP traffic</h2>
@@ -356,12 +350,12 @@ class Message extends React.Component {
                         <span className={styles.button__badge}>{this.state.HitsAlert.length}</span>
                       </div>
                       <Panel header="Traffic Alert Messages" eventKey="2" className={styles.alertPanel}>
-                      <Alert bsStyle="success">
-                      <ListGroup>
-                        {this.state.HitsAlert.map((alert) =>
-                        <ListGroupItem key={alert.toString()}><h5>HIGH TRAFFIC ALERT:</h5><p>{alert}</p></ListGroupItem> )}
-                      </ListGroup>
-                      </Alert>
+                        <Alert bsStyle="success">
+                          <ListGroup>
+                            {this.state.HitsAlert.map((alert) =>
+                            <ListGroupItem key={alert.toString()}><h5>HIGH TRAFFIC ALERT:</h5><p>{alert}</p></ListGroupItem> )}
+                          </ListGroup>
+                        </Alert>
                       </Panel>
                     </Accordion>
                 </Col>
