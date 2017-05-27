@@ -1,7 +1,11 @@
 
 body{
-  background: #222;
-  	font: 16px 'Open Sans', sans-serif;
+  background: #06beb6;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #48b1bf, #06beb6);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #48b1bf, #06beb6); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+
+font: 16px 'Open Sans', sans-serif;
 }
 .white{
   color:white;
@@ -9,13 +13,13 @@ body{
 }
 
 .pageHeader{
+  margin-top: 0;
   padding: 1%;
   padding-left: 20%;
-  color: #526494;;
-
+  color: white;
 }
 .pageHeader:hover{
-  color: #604484;
+  color:#B76EB8
 }
 .pageHeaderSmall{
     padding: 1%;
@@ -23,11 +27,12 @@ body{
 }
 
 .panelBox{
-  background: linear-gradient(#526494, #604484);
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.1), inset 0 0 2px rgba(255, 255, 255, 0.6);
 	margin: 10px auto 0;
 	border-radius: 5px;
 	width: 100%;
-  border-color:#526494;
+  border-color:transparent;
   color:white;
   height:150px;
 }
@@ -35,7 +40,7 @@ body{
   font-size: 18px;
 }
 .panelTitle:hover{
-  color: #7affec;
+  /**color: #EEF66C;**/
 }
 .panelStats{
   font-size: 38px;
@@ -43,7 +48,7 @@ body{
 	line-height: 1.2;
 }
 .panelStats:hover{
-  color: #7affec;
+  color: #EEF66C;
 }
 
 .topHitLink{
@@ -51,24 +56,54 @@ body{
 	font-weight: bold;
 	line-height: 1.2;
 }
-.topHits{
-  background-color: white;
-  text-align: center;
-  color:black;
-}
+
 .liveStatusPanel{
-  background: linear-gradient(#526494, #604484);
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.1), inset 0 0 2px rgba(255, 255, 255, 0.6);
   padding: 2%;
 }
-.tablePanel{
-  background-color: #405559;
-}
+
 .tableInside{
-  background:linear-gradient(#526494, #604484);
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.1), inset 0 0 2px rgba(255, 255, 255, 0.6);
   color:white;
   border-color:#526494;
 }
 .tableInside:hover{
-  background: linear-gradient(#526494, #604484);
-  color:#7affec;
+  color: #EEF66C;
+}
+.chart{
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.1), inset 0 0 2px rgba(255, 255, 255, 0.6);
+  padding: 2%;
+}
+.alertPanel{
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.1), inset 0 0 2px rgba(255, 255, 255, 0.6);
+  padding: 2%;
+}
+
+.button {
+  color:white;
+  display: inline-block;
+  position: relative;
+  float:right;
+  text-align: center;
+  width:25px;
+  height: 25px;
+  padding:1px;
+  background: #f0ad4e;
+}
+
+.button__badge {
+  background:red;
+    font-size:11px;
+    text-align: center;
+    position: absolute;
+    top: -4px;
+    left: 15px;
+    border-radius: 50%;
+    padding:1px;
+    width:14px;
+    height: 14px;
 }

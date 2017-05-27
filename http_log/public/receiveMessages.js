@@ -2,7 +2,7 @@ import {observer} from "mobx-react";
 import {observable} from "mobx";
 import React from 'react';
 import { render } from 'react-dom';
-import { Grid, Row, Col, Panel, ListGroup,ListGroupItem, Table, Accordion} from 'react-bootstrap';
+import { Grid, Row, Col, Panel, ListGroup,ListGroupItem, Table, Accordion, Button} from 'react-bootstrap';
 import {moment} from 'moment';
 import styles from './components/styles.css'
 import FaPlusSquareO from 'react-icons/lib/fa/plus-square-o'
@@ -12,6 +12,7 @@ import FaList from 'react-icons/lib/fa/list'
 import FaDashboard from 'react-icons/lib/fa/dashboard'
 import FaBullseye from 'react-icons/lib/fa/bullseye'
 import FaLineChart from 'react-icons/lib/fa/line-chart'
+import FaBell from 'react-icons/lib/fa/bell'
 import {ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts'
 
 @observer
@@ -54,7 +55,7 @@ class Message extends React.Component {
        timeElapsedMin:0,
        timeElapsedHour:0,
        timeElapsedDays:0,
-       chart:[]
+       chart:[{time:0,hits:0}]
      }
    }
 
@@ -235,25 +236,31 @@ class Message extends React.Component {
           <Grid>
             <Row>
             <h2 className={styles.white} ><FaLineChart/> Stats</h2>
+            <Col md={2}>
             <Panel className={styles.panelBox}>
-              <Col md={2}>
                   <h2 className={styles.panelTitle} ><FaPlusSquareO/>    Total Hits</h2>
                   <h1 className={styles.panelStats} >{this.state.totalHits}</h1>
+              </Panel>
               </Col>
-              <Col md={7}>
+              <Col md={6}>
+              <Panel className={styles.panelBox}>
                         <h2 className={styles.panelTitle}><FaFlag/>  Top Hit Page</h2>
                         <h3 className={styles.panelStats} >{this.state.HighestHitPage} [{this.state.HighestHitCount}]</h3>
+              </Panel>
               </Col>
-              <Col md={3}>
+              <Col md={4}>
+              <Panel className={styles.panelBox}>
                   <h2 className={styles.panelTitle}><FaHourglassO/> Time elapsed</h2>
                   <h2 className={styles.panelStats} >{this.state.timeElapsedDays} days, {this.state.timeElapsedHour}:{this.state.timeElapsedMin}:{this.state.timeElapsedSec}</h2>
-              </Col>
               </Panel>
+              </Col>
             </Row>
             <Row>
-              <Col md={12}>
-              <h2 className={styles.white} ><FaLineChart/> Live chart <span><h4> (calculated every 1 minute)</h4></span></h2>
-                <ResponsiveContainer height={300} width="100%">
+            <h2 className={styles.white} ><FaLineChart/> Live chart <span><h4> (calculated every 1 minute)</h4></span></h2>
+              <Col md={12} >
+              <Panel className={styles.chart} >
+
+                <ResponsiveContainer height={300} width="100%" >
                   <LineChart data={this.state.chart}
                         margin={{top: 5, right: 30, left: 20, bottom: 5}}>
                    <XAxis dataKey="time"/>
@@ -264,6 +271,7 @@ class Message extends React.Component {
                    <Line type="monotone" dataKey="hits" stroke="#8884d8" activeDot={{r: 8}}/>
                   </LineChart>
                 </ResponsiveContainer>
+                </Panel>
               </Col>
             </Row>
             <Row className="show-grid">
@@ -279,42 +287,42 @@ class Message extends React.Component {
                         </tr>
                     </thead>
                     <tbody>
-                      <tr>
+                      <tr className={styles.tableInside}>
                         <td>1</td>
                         <td>'https://www.example.com/'</td>
                         <td>{this.state.mainPageCount}</td>
                       </tr>
-                      <tr>
+                      <tr className={styles.tableInside}>
                         <td>2</td>
                         <td>'https://www.example.com/news'</td>
                         <td>{this.state.newsPageCount}</td>
                       </tr>
-                      <tr>
+                      <tr className={styles.tableInside}>
                         <td>3</td>
                         <td>'https://www.example.com/about'</td>
                         <td>{this.state.aboutPageCount}</td>
                       </tr>
-                      <tr>
+                      <tr className={styles.tableInside}>
                         <td>4</td>
                         <td>'https://www.example.com/blog'</td>
                         <td>{this.state.blogPageCount}</td>
                       </tr>
-                      <tr>
+                      <tr className={styles.tableInside}>
                         <td>5</td>
                         <td>'https://www.example.com/blog/tech'</td>
                         <td>{this.state.blogTechPageCount}</td>
                       </tr>
-                      <tr>
+                      <tr className={styles.tableInside}>
                         <td>6</td>
                         <td>'https://www.example.com/blog/cooking'</td>
                         <td>{this.state.blogCookPageCount}</td>
                       </tr>
-                      <tr>
+                      <tr className={styles.tableInside}>
                         <td>7</td>
                         <td>'https://www.example.com/news'</td>
                         <td>{this.state.blogRandomCount}</td>
                       </tr>
-                      <tr>
+                      <tr className={styles.tableInside}>
                         <td></td>
                         <td>TOTAL HITS</td>
                         <td>{this.state.totalHits}</td>
@@ -339,7 +347,11 @@ class Message extends React.Component {
                           )}
                         </ListGroup>
                       </Panel>
-                      <Panel header="High Traffic Alert Messages" eventKey="2" className={styles.liveStatusPanel}>
+                      <div className={styles.button} >
+                      <FaBell/>
+                      <span className={styles.button__badge}>{this.state.HitsAlert.length}</span>
+                      </div>
+                      <Panel header="High Traffic Alert Messages" eventKey="2" className={styles.alertPanel}>
                       <ListGroup>
                         {this.state.HitsAlert.map((alert) =>
                         <ListGroupItem key={alert.toString()}><span>HIGH TRAFFIC ALERT</span>{alert}</ListGroupItem> )}
