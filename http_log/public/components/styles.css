@@ -11,6 +11,9 @@ font: 16px 'Open Sans', sans-serif;
   color:white;
   font-size: 18px;
 }
+.white:hover{
+  color:#EEF66C
+}
 
 .pageHeader{
   margin-top: 0;
@@ -19,7 +22,7 @@ font: 16px 'Open Sans', sans-serif;
   color: white;
 }
 .pageHeader:hover{
-  color:#B76EB8
+  color:#EEF66C
 }
 .pageHeaderSmall{
     padding: 1%;
@@ -47,12 +50,9 @@ font: 16px 'Open Sans', sans-serif;
 	font-weight: bold;
 	line-height: 1.2;
 }
-.panelStats:hover{
-  color: #EEF66C;
-}
 
 .topHitLink{
-  font-size: 24px;
+  font-size: 22px;
 	font-weight: bold;
 	line-height: 1.2;
 }
@@ -81,6 +81,7 @@ font: 16px 'Open Sans', sans-serif;
   background: rgba(255, 255, 255, 0.2);
   box-shadow: 0 0 25px rgba(0, 0, 0, 0.1), inset 0 0 2px rgba(255, 255, 255, 0.6);
   padding: 2%;
+  display: block;
 }
 
 .button {

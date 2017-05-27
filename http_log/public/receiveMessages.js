@@ -2,7 +2,7 @@ import {observer} from "mobx-react";
 import {observable} from "mobx";
 import React from 'react';
 import { render } from 'react-dom';
-import { Grid, Row, Col, Panel, ListGroup,ListGroupItem, Table, Accordion, Button} from 'react-bootstrap';
+import { Grid, Row, Col, Panel, ListGroup,ListGroupItem, Table, Accordion, Button,Popover, Alert, Modal} from 'react-bootstrap';
 import {moment} from 'moment';
 import styles from './components/styles.css'
 import FaPlusSquareO from 'react-icons/lib/fa/plus-square-o'
@@ -48,6 +48,7 @@ class Message extends React.Component {
        blogCookPageCount: 0,
        blogRandomCount: 0,
        HitsAlert:[],
+       currentHitAlert:"",
        HighestHitCount:0,
        HighestHitPage:"",
        timeElapsed:0,
@@ -55,7 +56,8 @@ class Message extends React.Component {
        timeElapsedMin:0,
        timeElapsedHour:0,
        timeElapsedDays:0,
-       chart:[{time:0,hits:0}]
+       chart:[{time:0,hits:0}],
+       mShow:false
      }
    }
 
@@ -123,10 +125,12 @@ class Message extends React.Component {
                 console.log("new start time:" + startTimeSeconds)
                 startHitCount = HitCount
                 console.log("new start hit count :" + startHitCount)
-                var HitMessage = " - hits "+ HitCount+" ,triggered at time : "+ dateHit.toString()
+                var HitMessage = ""+ HitCount+" hits ,triggered at time : "+ dateHit.toLocaleString()
                 console.log(HitMessage)
                 this.setState({
-                  HitsAlert:this.state.HitsAlert.concat(HitMessage)
+                  HitsAlert:this.state.HitsAlert.concat(HitMessage),
+                  currentHitAlert:HitMessage,
+                  mShow:true
                 })
               }
             }
@@ -230,7 +234,7 @@ class Message extends React.Component {
     }
     //render UI
     render() {
-
+      let mClose = () => this.setState({ mShow: false })
       return (
         <div>
           <Grid>
@@ -245,7 +249,7 @@ class Message extends React.Component {
               <Col md={6}>
               <Panel className={styles.panelBox}>
                         <h2 className={styles.panelTitle}><FaFlag/>  Top Hit Page</h2>
-                        <h3 className={styles.panelStats} >{this.state.HighestHitPage} [{this.state.HighestHitCount}]</h3>
+                        <h3 className={styles.topHitLink} >{this.state.HighestHitPage} [{this.state.HighestHitCount}]</h3>
               </Panel>
               </Col>
               <Col md={4}>
@@ -331,9 +335,9 @@ class Message extends React.Component {
                   </Table>
 
                 </Col>
-                <Col md={4}>
+                <Col md={5}>
                   <h2 className={styles.white}><FaDashboard/> HTTP traffic</h2>
-                  <Accordion>
+                  <Accordion className={styles.accordionClick}>
                     <Panel header="Click to see Live status"eventKey="1" className={styles.liveStatusPanel}>
                         <ListGroup>
                           {this.state.singleMessage.map( (msg, idx) =>
@@ -348,19 +352,32 @@ class Message extends React.Component {
                         </ListGroup>
                       </Panel>
                       <div className={styles.button} >
-                      <FaBell/>
-                      <span className={styles.button__badge}>{this.state.HitsAlert.length}</span>
+                        <FaBell/>
+                        <span className={styles.button__badge}>{this.state.HitsAlert.length}</span>
                       </div>
-                      <Panel header="High Traffic Alert Messages" eventKey="2" className={styles.alertPanel}>
+                      <Panel header="Traffic Alert Messages" eventKey="2" className={styles.alertPanel}>
+                      <Alert bsStyle="success">
                       <ListGroup>
                         {this.state.HitsAlert.map((alert) =>
-                        <ListGroupItem key={alert.toString()}><span>HIGH TRAFFIC ALERT</span>{alert}</ListGroupItem> )}
+                        <ListGroupItem key={alert.toString()}><h5>HIGH TRAFFIC ALERT:</h5><p>{alert}</p></ListGroupItem> )}
                       </ListGroup>
+                      </Alert>
                       </Panel>
                     </Accordion>
                 </Col>
             </Row>
           </Grid>
+          <Modal show={this.state.mShow} onHide={mClose} bsSize="small" aria-labelledby="contained-modal-title-sm">
+            <Modal.Header closeButton>
+              <Modal.Title id="contained-modal-title-sm"><strong>HIGH TRAFFIC ALERT:</strong></Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <p>{this.state.currentHitAlert}</p>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button onClick={mClose}>Close</Button>
+            </Modal.Footer>
+          </Modal>
         </div>
       );
     }
